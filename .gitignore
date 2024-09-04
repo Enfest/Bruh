@@ -2,3 +2,6 @@ frontend/yarn.lock
 frontend/node_modules
 backend/yarn.lock
 backend/node_modules
+backend/.DS_Store
+frontend/.DS_Store
+.DS_Store
