@@ -12,10 +12,14 @@ import useQuery from "./hooks/useQuery";
 import { getQuestion, postQuestion } from "./hooks/useQuestions";
 import Question from "../components/Question.jsx";
 import CircularProgress from "@mui/material/CircularProgress";
+import Paper from "@mui/material/Paper";
+import Zoom from "@mui/material/Zoom";
 
 const ClinicNavigationPage = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [submitted, setSubmitted] = useState(false);
+    const [dialogLoading, setDialogLoading] = useState(false);
+    const [suggestionLoading, setSuggestionLoading] = useState(false);
     const navigate = useNavigate();
     const theme = useTheme();
     const query = useQuery();
@@ -31,12 +35,18 @@ const ClinicNavigationPage = () => {
             }}
             key={`${key}-wrapper`}
         >
-            <Typography variant="h5" component="div" key={`${key}-page-title`}>
-                title
-            </Typography>
+            <Paper key={`${key}-caring-words-background`} elevation={1} sx={{ padding: "10px" }}>
+                {!dialogLoading ? (
+                    <Typography variant="h5" component="div" key={`${key}-page-title`}>
+                        title
+                    </Typography>
+                ) : (
+                    <CircularProgress />
+                )}
+            </Paper>
             <Typography
                 key={`${key}-page-description`}
-                variant="subtitle2"
+                variant="h5"
                 component="div"
                 color="text.secondary"
             >

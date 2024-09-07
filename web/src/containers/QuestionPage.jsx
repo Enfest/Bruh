@@ -7,7 +7,7 @@ import { Typography, Box, Divider, TextField, Button } from "@mui/material";
 import React from "react";
 //component import
 import { useTheme } from "@mui/material/styles";
-import lodash from "lodash";
+import lodash, { set } from "lodash";
 import useQuery from "./hooks/useQuery";
 import { getQuestion, postQuestion } from "./hooks/useQuestions";
 import Question from "../components/Question.jsx";
@@ -15,12 +15,20 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Zoom from "@mui/material/Zoom";
 import { useInViewport } from "../containers/hooks/isInView.js";
 
-const QuestionPage = ({ title, description, questions }) => {
+const QuestionPage = () => {
     const [searchParams, setSearchParams] = useSearchParams();
-    const [submitted, setSubmitted] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [hash, setHash] = useState("");
+    const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
+    const [questions, setQuestions] = useState([]);
+
+    const [data, setData] = useState(null);
+    const [error, setError] = useState(null);
     const theme = useTheme();
     const query = useQuery();
     const location = useLocation();
+    const navigate = useNavigate();
     const key = sha256(title + description + JSON.stringify(questions));
     const ref = React.useRef(null);
     const { isVisible, update } = useInViewport(ref);
@@ -34,18 +42,67 @@ const QuestionPage = ({ title, description, questions }) => {
         setSearchParams({ ...oldVals, [name]: value });
     };
     const handleNextPage = () => {
-        setSubmitted(true);
+        setLoading(true);
+        console.log("handleNextPage");
+        handlePost();
         // turn off after 1 second
     };
+    const handlePost = async () => {
+        try {
+            const response = await handleFetch(() => postQuestion(location, questions));
+            console.log("response: ", response);
+            setLoading(false);
+            setError(null);
+            const { _hash } = response;
+            if (_hash) {
+                navigate(`?hash=${_hash}`);
+            } else {
+                console.error("No hash returned");
+                navigate(`?hash=${hash}`);
+            }
+        } catch (error) {
+            setError(error.message);
+            setLoading(false);
+        }
+    };
+    const handleGet = async () => {
+        try {
+            const data = await handleFetch(() => getQuestion(location));
+            const { hash, questions, title, description } = data;
+            setHash(hash);
+            setTitle(title);
+            setDescription(description);
+            setQuestions(questions);
 
+            setData(data);
+            setLoading(false);
+            setError(null);
+            onChange("hash", hash);
+        } catch (error) {
+            setError(error.message);
+            setLoading(false);
+        }
+    };
+    const handleFetch = async (callBack) => {
+        const response = await callBack();
+        if (!response.ok) {
+            throw new Error("Network response was not ok.");
+        }
+        const data = await response.json();
+        console.log(JSON.stringify(data));
+        setLoading(false);
+        return data;
+    };
     useEffect(() => {
-        const timeout = setTimeout(() => {
-            setSubmitted(false);
-        }, 1000);
-        return () => clearTimeout(timeout);
-    }, [submitted]);
+        handleGet();
+    }, []);
+    // useEffect(() => {
+    //     const timeout = setTimeout(() => {
+    //         setLoading(false);
+    //     }, 1000);
+    //     return () => clearTimeout(timeout);
+    // }, [loading]);
 
-    console.log(getQuestion(location));
     return (
         <Box
             sx={{
@@ -89,15 +146,20 @@ const QuestionPage = ({ title, description, questions }) => {
                 ref={ref}
             >
                 <div
-                    style={{ display: "flex", justifyContent: "center" }}
+                    style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        flexDirection: "column",
+                        alignItems: "center",
+                    }}
                     key={`${key}-butt-wrapper`}
                 >
-                    {!submitted ? (
+                    {!loading ? (
                         <Button
                             key={`${key}-next-butt`}
                             variant="contained"
                             onClick={() => handleNextPage()}
-                            sx={{ ...theme.select.MenuProps.PaperProps.style, width: 300 }}
+                            sx={{ ...theme?.select.MenuProps.PaperProps.style, width: 300 }}
                         >
                             Next
                         </Button>
@@ -105,11 +167,20 @@ const QuestionPage = ({ title, description, questions }) => {
                         <Button
                             key={`${key}-submitted-butt`}
                             variant="secondary"
-                            sx={{ ...theme.select.MenuProps.PaperProps.style, width: 300 }}
+                            sx={{ ...theme?.select.MenuProps.PaperProps.style, width: 300 }}
                         >
                             <CircularProgress />
                         </Button>
                     )}
+                    <Typography
+                        key={`${key}-error`}
+                        variant="subtitle2"
+                        component="div"
+                        color="error"
+                        sx={{ display: error ? "block" : "none" }}
+                    >
+                        {error}
+                    </Typography>
                 </div>
             </Zoom>
         </Box>
