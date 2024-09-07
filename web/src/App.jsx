@@ -22,6 +22,8 @@ import FindPage from "./containers/PersonalPage.jsx";
 import QuestionPage from "./containers/QuestionPage.jsx";
 import GetIn from "./containers/GetIn.jsx";
 import { question } from "./informations/question.js";
+import ClinicNavigationPage from "./containers/ClinicNavigationPage.jsx";
+import ScrollToTop from "./components/scrollToTop.jsx";
 function App() {
     const [open, setOpen] = useState(false);
     const { iflog, isManager } = useWebsite();
@@ -29,8 +31,9 @@ function App() {
     return (
         <ThemeProvider theme={theme}>
             <Router>
+                <ScrollToTop />
                 <Box>
-                    <Bar open={open} setOpen={setOpen}></Bar>
+                    {/* <Bar open={open} setOpen={setOpen}></Bar> */}
                     <Main open={open}>
                         {/* <Box sx = {{ width: "100%"}} > */}
                         {/* <DrawerHeader> */}
@@ -54,6 +57,11 @@ function App() {
                                         questions={question}
                                     />
                                 }
+                                exact
+                            ></Route>
+                            <Route
+                                path="/clinicNavigation"
+                                element={<ClinicNavigationPage />}
                                 exact
                             ></Route>
                         </Routes>

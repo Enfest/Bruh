@@ -42,6 +42,38 @@ const question = [
         description: "疼痛模式是你有多痛",
         options: ["好痛", "好爽"],
     },
+    {
+        id: 3,
+        type: "SELECT",
+        hasSubpage: false,
+        title: "疼痛模式",
+        description: "疼痛模式是你有多痛",
+        options: ["好痛", "好爽"],
+    },
+    {
+        id: 3,
+        type: "SELECT",
+        hasSubpage: false,
+        title: "疼痛模式",
+        description: "疼痛模式是你有多痛",
+        options: ["好痛", "好爽"],
+    },
+    {
+        id: 3,
+        type: "SELECT",
+        hasSubpage: false,
+        title: "疼痛模式",
+        description: "疼痛模式是你有多痛",
+        options: ["好痛", "好爽"],
+    },
+    {
+        id: 3,
+        type: "SELECT",
+        hasSubpage: false,
+        title: "疼痛模式",
+        description: "疼痛模式是你有多痛",
+        options: ["好痛", "好爽"],
+    },
 ];
 
 export { question };

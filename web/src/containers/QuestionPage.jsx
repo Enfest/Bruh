@@ -11,13 +11,19 @@ import lodash from "lodash";
 import useQuery from "./hooks/useQuery";
 import { getQuestion, postQuestion } from "./hooks/useQuestions";
 import Question from "../components/Question.jsx";
+import CircularProgress from "@mui/material/CircularProgress";
+import Zoom from "@mui/material/Zoom";
+import { useInViewport } from "../containers/hooks/isInView.js";
 
-const QuestionPage = ({ title, description, questions, handleNextPage }) => {
+const QuestionPage = ({ title, description, questions }) => {
     const [searchParams, setSearchParams] = useSearchParams();
+    const [submitted, setSubmitted] = useState(false);
     const theme = useTheme();
     const query = useQuery();
     const location = useLocation();
     const key = sha256(title + description + JSON.stringify(questions));
+    const ref = React.useRef(null);
+    const { isVisible, update } = useInViewport(ref);
 
     const onChange = (name, value) => {
         const oldVals = {};
@@ -27,6 +33,18 @@ const QuestionPage = ({ title, description, questions, handleNextPage }) => {
         }
         setSearchParams({ ...oldVals, [name]: value });
     };
+    const handleNextPage = () => {
+        setSubmitted(true);
+        // turn off after 1 second
+    };
+
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            setSubmitted(false);
+        }, 1000);
+        return () => clearTimeout(timeout);
+    }, [submitted]);
+
     console.log(getQuestion(location));
     return (
         <Box
@@ -46,36 +64,54 @@ const QuestionPage = ({ title, description, questions, handleNextPage }) => {
                 component="div"
                 color="text.secondary"
             >
-                {description}
+                {description == "<INIT>" ? "" : description}
             </Typography>
-            {questions?.map((v) => {
+            {questions?.map((v, index) => {
                 return (
-                    <div key={`${key}-q-wrapper` + JSON.stringify(v)}>
-                        <Divider key={`${key}-divider` + JSON.stringify(v)} />
-                        <Question
-                            key={`${key}-question` + JSON.stringify(v)}
-                            id={`${v.id}`}
-                            type={v.type}
-                            title={v.title}
-                            description={v.description}
-                            options={v.options}
-                            onChange={onChange}
-                            theme={theme}
-                            query={query}
-                        />
-                    </div>
+                    <Question
+                        key={`${key}-question` + JSON.stringify(v)}
+                        id={`${v.id}`}
+                        index={index}
+                        type={v.type}
+                        title={v.title}
+                        description={v.description}
+                        options={v.options}
+                        onChange={onChange}
+                        theme={theme}
+                        query={query}
+                    />
                 );
             })}
-            <div style={{ display: "flex", justifyContent: "center" }} key={`${key}-butt-wrapper`}>
-                <Button
-                    key={`${key}-next-butt`}
-                    variant="contained"
-                    onClick={() => handleNextPage()}
-                    sx={{ ...theme.select.MenuProps.PaperProps.style, width: 300 }}
+            <Zoom
+                key={`${key}-butt-zoom`}
+                in={isVisible}
+                style={{ transitionDelay: isVisible ? `50ms` : "0ms" }}
+                ref={ref}
+            >
+                <div
+                    style={{ display: "flex", justifyContent: "center" }}
+                    key={`${key}-butt-wrapper`}
                 >
-                    Next
-                </Button>
-            </div>
+                    {!submitted ? (
+                        <Button
+                            key={`${key}-next-butt`}
+                            variant="contained"
+                            onClick={() => handleNextPage()}
+                            sx={{ ...theme.select.MenuProps.PaperProps.style, width: 300 }}
+                        >
+                            Next
+                        </Button>
+                    ) : (
+                        <Button
+                            key={`${key}-submitted-butt`}
+                            variant="secondary"
+                            sx={{ ...theme.select.MenuProps.PaperProps.style, width: 300 }}
+                        >
+                            <CircularProgress />
+                        </Button>
+                    )}
+                </div>
+            </Zoom>
         </Box>
     );
 };

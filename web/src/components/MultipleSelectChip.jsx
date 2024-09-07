@@ -58,7 +58,12 @@ function MultipleSelectChip({ placeholder, options, id, onChange, defaultValue }
                     renderValue={(selected) => (
                         <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
                             {selected.map((value) => (
-                                <Chip key={`${id}-${value}`} label={value} />
+                                <Chip
+                                    key={`${id}-${value}`}
+                                    label={value}
+                                    variant="outlined" // [CHANGE ME], color sucks
+                                    color="primary"
+                                />
                             ))}
                         </Box>
                     )}

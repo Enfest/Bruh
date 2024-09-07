@@ -29,6 +29,9 @@ const MainPage = () => {
             <Button variant="contained" onClick={() => navigate("/classification")}>
                 分類
             </Button>
+            <Button variant="contained" onClick={() => navigate("/clinicNavigation")}>
+                Clinic Navigation
+            </Button>
         </Box>
         // <EventCard />
     );
