@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 
 import { v4 as uuidv4 } from "uuid";
+import { createHash } from "crypto";
 import prisma from "../../../prisma";
 
 import { orderListToRecord } from "../../../utils/category";
@@ -8,7 +9,7 @@ import { orderListToRecord } from "../../../utils/category";
 // Define the structure of the form submission data
 type TCategoryFormPageSubmit = {
     hash: string                              // Unique identifier for the form session
-    answers: Record<string, string | number[]> // User's answers to the questions
+    answers: Record<string, string | string[]> // User's answers to the questions
 }
 
 const submitFormPage = async (req: Request, res: Response) => {
@@ -56,13 +57,21 @@ const submitFormPage = async (req: Request, res: Response) => {
         // });
 
         // Duplicate the page stack
-        const newHash = uuidv4();
-        const session = pageStack.session;
+        const answersString = JSON.stringify(answers);
+        const newHash = createHash("md5").update(hash).update(answersString).digest("hex");
+
+        if (await prisma.categoryFormPageStack.count({
+            where: { hash: newHash }
+        }) > 0) {
+            res.send({ success: true, hash: newHash });
+            return;
+        }
+
         const prunedPages = pages.slice(0, pages.length - 1);
         const newPageStack = await prisma.categoryFormPageStack.create({
             data: {
                 hash: newHash,
-                session,
+                // session,
                 pages: {
                     connect: prunedPages.map(page => ({ id: page.id }))
                 },
@@ -73,6 +82,25 @@ const submitFormPage = async (req: Request, res: Response) => {
                     }))
                 }
             }
+        });
+
+        await prisma.categoryFormAnswer.createMany({
+            data: Object.entries(answers).map(([questionId, answer]) => {
+                if (typeof answer === "string") {
+                    return {
+                        hash: newHash,
+                        questionId: parseInt(questionId),
+                        answer
+                    }
+                }
+                else {
+                    return {
+                        hash,
+                        questionId: parseInt(questionId),
+                        answerList: answer
+                    }
+                }
+            })
         });
 
         // Retrieve and sort the questions for the last page
@@ -135,18 +163,11 @@ const submitFormPage = async (req: Request, res: Response) => {
             }
         });
 
-        // Generate a new hash for the updated form session
-        // const newHash = uuidv4();
-        // await prisma.categoryFormPageStack.update({
-        //     where: {
-        //         id: pageStack.id
-        //     },
+        // await prisma.categoryFormAnswer.createMany({
         //     data: {
-        //         hash: {
-        //             set: newHash
-        //         }
-        //     }
-        // });
+
+        //     }                
+        // })
 
         // Send the success response with the new hash
         res.send({ success: true, hash: newHash });

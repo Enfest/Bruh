@@ -74,13 +74,24 @@ model CategoryFormQuestionPageOrder {
   @@unique([pageStackId, pageId, order])
 }
 
+model CategoryFormAnswer {
+  hash       String
+  questionId Int
+  answer     String   @default("")
+  answerList String[] @default([])
+
+  question  CategoryFormQuestion  @relation(fields: [questionId], references: [id])
+  pageStack CategoryFormPageStack @relation(fields: [hash], references: [hash])
+
+  @@unique([hash, questionId])
+}
+
 model CategoryFormPageStack {
   id         Int                             @id @default(autoincrement())
-  session    String
   hash       String                          @unique()
   pages      CategoryFormQuestionPage[]
   pageOrders CategoryFormQuestionPageOrder[]
-  answer     CategoryFormAnswer?
+  answer     CategoryFormAnswer[]
 }
 
 model CategoryFormQuestion {
@@ -89,18 +100,19 @@ model CategoryFormQuestion {
   title       String
   description String
 
-  options CategoryFormQuestionOption[] @relation("QuestionOptions")
-  answer  CategoryFormAnswer[]
+  options            CategoryFormQuestionOption[] @relation("QuestionOptions")
+  // answer  CategoryFormAnswer[]
+  CategoryFormAnswer CategoryFormAnswer[]
 }
 
-model CategoryFormAnswer {
-  pageStackId Int      @unique
-  questionId  Int
-  answer      String   @default("")
-  answerList  String[] @default([])
+// model CategoryFormAnswer {
+//   session    String
+//   questionId Int
+//   answer     String   @default("")
+//   answerList String[] @default([])
 
-  pageStack CategoryFormPageStack @relation(fields: [pageStackId], references: [id], onDelete: Cascade)
-  question  CategoryFormQuestion  @relation(fields: [questionId], references: [id], onDelete: Cascade)
+//   // pageStack CategoryFormPageStack @relation(fields: [pageStackId], references: [id], onDelete: Cascade)
+//   question CategoryFormQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
 
-  @@unique([pageStackId, questionId])
-}
+//   @@unique([session, questionId])
+// }

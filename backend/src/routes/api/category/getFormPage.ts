@@ -28,7 +28,7 @@ const getFormQuestions = async (ids: number[]) => {
 
 const getFormPage = async (req: Request, res: Response) => {
     try {
-        let hash = req.query.hash as string;
+        const hash = req.query.hash as string;
         const pageStackFind = await prisma.categoryFormPageStack.findFirst({
             where: { hash },
             include: {
@@ -43,12 +43,12 @@ const getFormPage = async (req: Request, res: Response) => {
                 where: { description: "<INIT>" }
             });
 
-            hash = uuidv4();
-            const session = uuidv4();
+            // hash = uuidv4();
+            // const session = uuidv4();
             const pageStack = await prisma.categoryFormPageStack.create({
                 data: {
                     hash,
-                    session,
+                    // session,
                     pages: {
                         connect: { id: initialPage.id }
                     },
@@ -63,7 +63,8 @@ const getFormPage = async (req: Request, res: Response) => {
             where: { hash },
             include: {
                 pages: true,
-                pageOrders: true
+                pageOrders: true,
+                answer: true,
             }
         });
 
@@ -82,8 +83,27 @@ const getFormPage = async (req: Request, res: Response) => {
 
         const page = pages[pages.length - 1];
         const formQuestions = await getFormQuestions(page.questionIds);
+        const formAnswers = pageStack.answer.map((answer) => {
+            if (answer.answer !== "") {
+                return {
+                    questionId: answer.questionId,
+                    answer: answer.answer
+                }
+            }
+            return {
+                questionId: answer.questionId,
+                answerList: answer.answerList
+            }
+        })
 
-        res.send({ success: true, hash, title: page.title, description: page.description, questions: formQuestions });
+        res.send({
+            success: true,
+            hash,
+            title: page.title,
+            description: page.description,
+            questions: formQuestions,
+            answers: formAnswers
+        });
 
     } catch (error) {
         res.send({ success: false, error });
