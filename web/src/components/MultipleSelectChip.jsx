@@ -29,9 +29,10 @@ function getStyles(name, personName, theme) {
     };
 }
 
-function MultipleSelectChip({ placeholder, options, id, onChange, defaultValue }) {
+function MultipleSelectChip({ placeholder, options, id, onChange, defaultValue, handlBlur }) {
     const theme = useTheme();
     const [vals, setVals] = React.useState([]);
+    const [focusedNum, setFocusedNum] = React.useState(0);
     const handleChange = (event) => {
         const {
             target: { value },
@@ -39,6 +40,10 @@ function MultipleSelectChip({ placeholder, options, id, onChange, defaultValue }
         const parsedValue = typeof value === "string" ? value.split(",") : value;
         setVals(parsedValue);
         onChange(parsedValue);
+        setFocusedNum(focusedNum + 1);
+        if (focusedNum < 1) {
+            handlBlur();
+        }
     };
     useEffect(() => {
         setVals(defaultValue ?? []);

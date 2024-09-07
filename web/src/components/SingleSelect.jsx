@@ -6,14 +6,26 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { useTheme } from "@mui/material/styles";
 
-export default function BasicSelect({ placeholder, options, id, onChange, defaultValue }) {
+export default function BasicSelect({
+    placeholder,
+    options,
+    id,
+    onChange,
+    defaultValue,
+    handlBlur,
+}) {
     const theme = useTheme();
     const [val, setVal] = React.useState("");
+    const [focusedNum, setFocusedNum] = React.useState(0);
 
     const handleChange = (event) => {
         const value = event.target.value;
         setVal(value);
         onChange(value);
+        setFocusedNum(focusedNum + 1);
+        if (focusedNum < 1) {
+            handlBlur();
+        }
     };
     React.useEffect(() => {
         if (options.includes(defaultValue)) {

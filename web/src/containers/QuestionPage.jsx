@@ -3,7 +3,17 @@ import { useEffect, useState, useCallback } from "react";
 import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
 import { sha256 } from "js-sha256";
 //mui import
-import { Typography, Box, Divider, TextField, Button, IconButton } from "@mui/material";
+import {
+    Typography,
+    Box,
+    Divider,
+    TextField,
+    Button,
+    IconButton,
+    Grid,
+    Avatar,
+    Paper,
+} from "@mui/material";
 import React from "react";
 //component import
 import { useTheme } from "@mui/material/styles";
@@ -24,7 +34,7 @@ const QuestionPage = () => {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [questions, setQuestions] = useState([]);
-
+    const [activedIndex, setActivedIndex] = useState(0);
     const [data, setData] = useState(null);
     const [error, setError] = useState(null);
     const theme = useTheme();
@@ -48,7 +58,7 @@ const QuestionPage = () => {
     };
     const handleNextPage = () => {
         setLoading(true);
-        console.log("handleNextPage");
+        // console.log("handleNextPage");
         handlePost();
     };
     const handlePost = async () => {
@@ -59,8 +69,14 @@ const QuestionPage = () => {
                 return postQuestion(location, questions);
             });
             console.log("response: ", response);
+            if (!response.success) {
+                throw new Error(response.error);
+            }
+
             setLoading(false);
             setError(null);
+            setActivedIndex(0);
+
             const { hash: _hash } = response;
             if (_hash) {
                 setHash(_hash);
@@ -133,12 +149,37 @@ const QuestionPage = () => {
             }}
             key={`${key}-wrapper`}
         >
+            {" "}
+            <Grid container sx={{ width: "100%" }} spacing={2}>
+                <Grid item>
+                    <Avatar
+                        alt="robot"
+                        src="https://media.istockphoto.com/id/949119664/vector/cute-white-doctor-robot-modern-health-care-flat-editable-vector-illustration-clip-art.jpg?s=612x612&w=0&k=20&c=Tp7_la5mgePZ2mkOk_17jX0f-vorLZmbT9JOTDyG4gw="
+                    />
+                </Grid>
+                <Grid item alignContent="center">
+                    <Paper
+                        sx={{ borderBottomRightRadius: 0, borderBottomLeftRadius: 0 }}
+                        elevation={0}
+                    >
+                        <Typography variant="body">{title}</Typography>
+                    </Paper>
+                    {description ? (
+                        <Paper
+                            sx={{ borderTopRightRadius: 0, borderTopLeftRadius: 0 }}
+                            elevation={0}
+                        >
+                            <Typography variant="body">{description}</Typography>
+                        </Paper>
+                    ) : null}
+                </Grid>
+            </Grid>
             {questions?.map((v, index) => {
                 return (
                     <Question
                         key={`${key}-question` + JSON.stringify(v)}
                         id={`${v.id}`}
-                        index={index}
+                        visible={index <= activedIndex}
                         type={v.type}
                         title={v.title}
                         description={v.description}
@@ -146,6 +187,10 @@ const QuestionPage = () => {
                         onChange={onChange}
                         theme={theme}
                         query={query}
+                        handlBlur={(e) => {
+                            console.log(activedIndex);
+                            setActivedIndex(activedIndex + 1);
+                        }}
                     />
                 );
             })}
@@ -161,6 +206,9 @@ const QuestionPage = () => {
                         justifyContent: "center",
                         flexDirection: "column",
                         alignItems: "end",
+                        opacity: questions.length <= activedIndex ? "100" : "0",
+                        transitionDuration: "500ms",
+                        transitionDelay: "200ms",
                     }}
                     key={`${key}-butt-wrapper`}
                 >
@@ -170,7 +218,8 @@ const QuestionPage = () => {
                             variant="contained"
                             onClick={() => handleNextPage()}
                             startIcon={<DoubleArrowIcon />}
-                            sx={{ ...theme?.select.MenuProps.PaperProps.style, width: 300 }}
+                            sx={{ ...theme?.select.MenuProps.PaperProps.style, width: "100px" }}
+                            disabled={questions.length > activedIndex}
                         >
                             Next
                         </Button>
@@ -178,7 +227,8 @@ const QuestionPage = () => {
                         <Button
                             key={`${key}-submitted-butt`}
                             variant="secondary"
-                            sx={{ ...theme?.select.MenuProps.PaperProps.style, width: 300 }}
+                            sx={{ ...theme?.select.MenuProps.PaperProps.style, width: "100px" }}
+                            disabled={questions.length > activedIndex}
                         >
                             <CircularProgress />
                         </Button>

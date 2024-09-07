@@ -57,5 +57,19 @@ const postQuestion = async (location, options) => {
     const response = fetch(myRequest);
     return response;
 };
+const getResult = async (hash) => {
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    const url =
+        `${backendHost}/api/category/getFormPage` + new URLSearchParams({ hash: hash }).toString();
+    console.log("GET ", url);
+    const myRequest = new Request(url, {
+        method: "GET",
+        headers: myHeaders,
+    });
+    const response = fetch(myRequest);
+    return response;
+};
 
 export { getQuestion, postQuestion };
