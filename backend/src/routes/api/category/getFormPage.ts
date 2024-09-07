@@ -29,6 +29,8 @@ const getFormQuestions = async (ids: number[]) => {
 const getFormPage = async (req: Request, res: Response) => {
     try {
         const hash = req.query.hash as string;
+        
+        // Find or create the initial page stack
         const pageStackFind = await prisma.categoryFormPageStack.findFirst({
             where: { hash },
             include: {
@@ -59,6 +61,7 @@ const getFormPage = async (req: Request, res: Response) => {
             });
         }
 
+        // Retrieve the full page stack with related data
         const pageStack = await prisma.categoryFormPageStack.findUniqueOrThrow({
             where: { hash },
             include: {
@@ -68,6 +71,7 @@ const getFormPage = async (req: Request, res: Response) => {
             }
         });
 
+        // Process and sort pages
         const pageOrder = orderListToRecord(pageStack.pageOrders, "pageId");
         const pages = pageStack.pages.map((page) => {
             const order = pageOrder[page.id];
@@ -81,8 +85,11 @@ const getFormPage = async (req: Request, res: Response) => {
         });
         pages.sort((a, b) => a.order - b.order);
 
+        // Get the last page and its questions
         const page = pages[pages.length - 1];
         const formQuestions = await getFormQuestions(page.questionIds);
+
+        // Process answers
         const formAnswers = pageStack.answer.map((answer) => {
             if (answer.answer !== "") {
                 return {
@@ -96,6 +103,7 @@ const getFormPage = async (req: Request, res: Response) => {
             }
         })
 
+        // Send response with page data
         res.send({
             success: true,
             hash,
@@ -106,6 +114,7 @@ const getFormPage = async (req: Request, res: Response) => {
         });
 
     } catch (error) {
+        // Handle errors and send error response
         res.send({ success: false, error });
         console.log(error);
     }

@@ -15,12 +15,14 @@ generator typegraphql {
   output   = "./generated/type-graphql"
 }
 
+// Enum for different types of form questions
 enum CategoryFormQuestionType {
   SELECT
   MULTISELECT
   TEXT
 }
 
+// Model to store the order of questions within a page
 model CategoryFormQuestionOrder {
   id         Int @id @default(autoincrement())
   pageId     Int
@@ -33,6 +35,7 @@ model CategoryFormQuestionOrder {
   @@unique([pageId, questionId])
 }
 
+// Model to represent a page in the category form
 model CategoryFormQuestionPage {
   id          Int    @id @default(autoincrement())
   optionId    Int?
@@ -50,6 +53,7 @@ model CategoryFormQuestionPage {
   @@unique([optionId])
 }
 
+// Model to represent an option for a form question
 model CategoryFormQuestionOption {
   id                      Int  @id @default(autoincrement())
   questionId              Int?
@@ -62,6 +66,7 @@ model CategoryFormQuestionOption {
   question CategoryFormQuestion? @relation("QuestionOptions", fields: [questionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
+// Model to store the order of pages within a page stack
 model CategoryFormQuestionPageOrder {
   id          Int @id @default(autoincrement())
   pageStackId Int
@@ -74,6 +79,7 @@ model CategoryFormQuestionPageOrder {
   @@unique([pageStackId, pageId, order])
 }
 
+// Model to store answers for form questions
 model CategoryFormAnswer {
   hash       String
   questionId Int
@@ -86,33 +92,26 @@ model CategoryFormAnswer {
   @@unique([hash, questionId])
 }
 
+// Model to represent a stack of pages in the form
 model CategoryFormPageStack {
   id         Int                             @id @default(autoincrement())
   hash       String                          @unique()
+  prevHash   String                          @default("")
   pages      CategoryFormQuestionPage[]
   pageOrders CategoryFormQuestionPageOrder[]
   answer     CategoryFormAnswer[]
+  done       Boolean                         @default(false)
 }
 
+// Model to represent a question in the category form
 model CategoryFormQuestion {
   id          Int                      @id @unique
   type        CategoryFormQuestionType
   title       String
   description String
 
-  options            CategoryFormQuestionOption[] @relation("QuestionOptions")
-  // answer  CategoryFormAnswer[]
-  CategoryFormAnswer CategoryFormAnswer[]
+  options CategoryFormQuestionOption[] @relation("QuestionOptions")
+  answer  CategoryFormAnswer[]
 }
 
-// model CategoryFormAnswer {
-//   session    String
-//   questionId Int
-//   answer     String   @default("")
-//   answerList String[] @default([])
-
-//   // pageStack CategoryFormPageStack @relation(fields: [pageStackId], references: [id], onDelete: Cascade)
-//   question CategoryFormQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
-
-//   @@unique([session, questionId])
-// }
+// ... existing commented out model ...

@@ -13,14 +13,13 @@ const init = async (req: Request, res: Response) => {
     const dataObj: TExportData = JSON.parse(data.data.toString("utf8"));
 
     // TODO: check data
-    await Promise.all([
-        prisma.categoryFormQuestionOrder.deleteMany(),
-        prisma.categoryFormQuestion.deleteMany(),
-        prisma.categoryFormQuestionOption.deleteMany(),
-        prisma.categoryFormPageStack.deleteMany(),
-        prisma.categoryFormQuestionPageOrder.deleteMany(),
-        prisma.categoryFormQuestionPage.deleteMany()
-    ]);
+    await prisma.categoryFormAnswer.deleteMany();
+    await prisma.categoryFormQuestionOrder.deleteMany();
+    await prisma.categoryFormQuestion.deleteMany();
+    await prisma.categoryFormQuestionOption.deleteMany();
+    await prisma.categoryFormPageStack.deleteMany();
+    await prisma.categoryFormQuestionPageOrder.deleteMany();
+    await prisma.categoryFormQuestionPage.deleteMany();
 
     // init category questions
     const formQuestions = dataObj.category.formQuestions;
