@@ -93,7 +93,7 @@ const MainPage = () => {
                 <Card
                     sx={{ width: "100%" }}
                     onClick={() => {
-                        navigate("/clinicNavigation");
+                        navigate("/classification/result");
                     }}
                 >
                     <CardMedia

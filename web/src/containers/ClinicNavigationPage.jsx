@@ -3,18 +3,15 @@ import { useEffect, useState, useCallback } from "react";
 import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
 import { sha256 } from "js-sha256";
 //mui import
-import { Typography, Box, Divider, TextField, Button } from "@mui/material";
+import { Typography, Box, Divider, TextField, Button, Grid, Avatar } from "@mui/material";
 import React from "react";
 //component import
 import { useTheme } from "@mui/material/styles";
-import lodash from "lodash";
 import useQuery from "./hooks/useQuery";
-import { getQuestion, postQuestion } from "./hooks/useQuestions";
-import Question from "../components/Question.jsx";
 import CircularProgress from "@mui/material/CircularProgress";
 import Paper from "@mui/material/Paper";
-import Zoom from "@mui/material/Zoom";
 import HospitalCard from "../components/HospitalCard.jsx";
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
 
 const hpData = [
     {
@@ -48,59 +45,27 @@ const ClinicNavigationPage = () => {
             }}
             key={`${key}-wrapper`}
         >
-            <Paper
-                key={`${key}-caring-words-background`}
-                elevation={1}
+            <Grid container sx={{width: "100%"}} spacing={2}>
+                <Grid item>
+                    <Avatar alt="robot" src="https://media.istockphoto.com/id/949119664/vector/cute-white-doctor-robot-modern-health-care-flat-editable-vector-illustration-clip-art.jpg?s=612x612&w=0&k=20&c=Tp7_la5mgePZ2mkOk_17jX0f-vorLZmbT9JOTDyG4gw=" />
+                </Grid>
+                <Grid item alignContent="center">
+                    <Typography variant='body'>檢測結果</Typography>
+                </Grid>
+            </Grid>
+            {!dialogLoading ? 
+                <Grid container sx={{width: "100%"}}>
+                <Typography variant="body">
+                    description
+                </Typography>
+                </Grid>:<CircularProgress />
+
+            }
+            <Box
                 sx={{
-                    padding: "10px",
-                    width: "90%",
-                    height: "300px",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: dialogLoading ? "center" : "space-between",
-                    alignItems: dialogLoading ? "center" : "flex-start",
-                    justifySelf: "center",
-                }}
-            >
-                {!dialogLoading ? (
-                    <>
-                        <Typography variant="h5" component="div" key={`${key}-page-title`}>
-                            title
-                        </Typography>
-                        <Typography variant="h3" component="div" key={`${key}-page-title`}>
-                            title
-                        </Typography>
-                    </>
-                ) : (
-                    <CircularProgress />
-                )}
-                <Paper
-                    key={`${key}-caring-words-background`}
-                    elevation={0}
-                    sx={{
-                        width: "100%",
-                        height: "50px",
-                        display: "flex",
-                        justifyContent: "flex-start",
-                        alignItems: "flex-start",
-                        justifySelf: "flex-start",
-                    }}
-                >
-                    <Typography key={`${key}-page-description`} variant="h5" component="div">
-                        description
-                    </Typography>
-                </Paper>
-            </Paper>
-            <Paper
-                key={`${key}-question-background`}
-                elevation={0}
-                sx={{
-                    padding: "10px",
-                    display: "flex",
+                    display: "flex", 
                     justifyContent: "center",
-                    alignItems: "center",
-                    height: "100%",
-                    width: "90%",
+                    width: "100%",
                 }}
             >
                 {hpData.map((hp) => (
@@ -115,16 +80,17 @@ const ClinicNavigationPage = () => {
                         distance={hp.distance}
                     />
                 ))}
-            </Paper>
+            </Box>
             <div style={{ display: "flex", justifyContent: "center" }} key={`${key}-butt-wrapper`}>
                 {!submitted ? (
                     <Button
                         key={`${key}-next-butt`}
                         variant="contained"
                         onClick={() => (window.location.href = "https://chatgpt.com/?model=auto")}
-                        sx={{ ...theme.select.MenuProps.PaperProps.style, width: 300 }}
+                        sx={{width: "100%"}}
+                        startIcon={<RestartAltIcon />}
                     >
-                        To Chat Bot
+                        再測一次
                     </Button>
                 ) : (
                     <Button
