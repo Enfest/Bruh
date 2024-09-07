@@ -79,7 +79,7 @@ const Hos = () => {
         <GoogleMap
           mapContainerStyle={{ width: "100%", height: "400px" }}
           center={userPosition} // Use center state
-          zoom={16}
+          zoom={15}
           onClick={handleMapClick}
         >
           {userPosition && (
@@ -137,7 +137,7 @@ const Hos = () => {
         </GoogleMap>
       )}
       {!isLoaded && <div>地圖載入中...</div>}
-      <Button onClick={() => ClickEvent()}>ddd</Button>
+      {/* <Button onClick={() => ClickEvent()}>ddd</Button> */}
     </div>
   );
 };
