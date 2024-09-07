@@ -24,22 +24,21 @@ const postQuestion = async (location, options) => {
     myHeaders.append("Content-Type", "application/json");
 
     const searchParams = new URLSearchParams(location.search);
-    let postParams = {};
+    let postParams = { hash: searchParams.get("hash") ?? "0", answers: {} };
     for (const option of options) {
         const id = option.id;
         const subOptions = option.options;
         const selected = searchParams.getAll(id);
         const found = (text) => (e) => e.text === text;
         const selectedIndex = selected.map((text) => subOptions.findIndexOf(found(text)));
-        postParams[id] = selectedIndex;
+        postParams["answers"][id] = selectedIndex;
     }
 
-    const url =
-        `${window.location.host}/api/category/submitFormPage?` +
-        new URLSearchParams(postParams).toString();
+    const url = `${window.location.host}/api/category/submitFormPage`;
 
     const myRequest = new Request(url, {
         method: "POST",
+        body: JSON.stringify(postParams),
         headers: myHeaders,
     });
 
