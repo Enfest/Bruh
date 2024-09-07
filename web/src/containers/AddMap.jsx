@@ -162,7 +162,7 @@ const AddMap = ({ add }) => {
         </GoogleMap>
       )}
       {!isLoaded && <div>地圖載入中...</div>}
-      <Button onClick={() => ClickEvent()}>ddd</Button>
+      {/* <Button onClick={() => ClickEvent()}>ddd</Button> */}
     </div>
   );
 };
