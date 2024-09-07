@@ -12,11 +12,9 @@ import Bar from "./components/Bar.jsx";
 import Test from "./containers/Test.jsx";
 import AddMap from "./containers/AddMap.jsx";
 import MainPage from "./containers/MainPage.jsx";
-import Login from "./containers/Login.jsx";
-import ManagerPage from "./containers/ManagerPage.jsx";
-import { Main, DrawerHeader } from "./components/bar_component/BarDrawer.jsx";
-import CheckoutPage from "./containers/CheckoutPage.jsx";
-import Register from "./containers/RegisterPage.jsx";
+import { Main, DrawerHeader } from './components/bar_component/BarDrawer.jsx';
+// import { Map } from "./containers/"
+
 
 import theme from "./theme.js";
 import FindPage from "./containers/PersonalPage.jsx";
@@ -38,12 +36,7 @@ function App() {
               <Route path="/test" element={<Test />} />
               <Route path="/map" element={<AddMap />} />
               <Route path="/" element={<MainPage />} />
-              <Route path="/login" element={<Login />}></Route>
-              <Route path="/manager" element={isManager ? <ManagerPage /> : <Login />} />
-              <Route path="/checkout" element={<CheckoutPage />} />
-              <Route path="/find" element={<FindPage />} />
-              <Route path="/register" element={<Register />}></Route>
-              <Route path="/getin" element={<GetIn />}></Route>
+  
             </Routes>
             {/* </DrawerHeader> */}
             {/* </Box> */}
