@@ -15,7 +15,92 @@ generator typegraphql {
   output   = "./generated/type-graphql"
 }
 
-model TestType {
-  id      Int    @id @default(autoincrement())
-  message String @unique
+enum CategoryFormQuestionType {
+  SELECT
+  MULTISELECT
+  TEXT
+}
+
+model CategoryFormQuestionOrder {
+  id         Int @id @default(autoincrement())
+  pageId     Int
+  questionId Int
+  order      Int
+
+  page CategoryFormQuestionPage @relation(fields: [pageId], references: [id], onDelete: Cascade)
+
+  @@unique([pageId, order])
+  @@unique([pageId, questionId])
+}
+
+model CategoryFormQuestionPage {
+  id          Int    @id @default(autoincrement())
+  optionId    Int?
+  pageStackId Int?
+  pageOrderId Int?
+  title       String @default("")
+  description String @default("")
+  questionIds Int[]
+
+  questionOrders CategoryFormQuestionOrder[]
+  pageOrder      CategoryFormQuestionPageOrder[]
+  option         CategoryFormQuestionOption?     @relation(fields: [optionId], references: [id])
+  pageStack      CategoryFormPageStack?          @relation(fields: [pageStackId], references: [id])
+
+  @@unique([optionId])
+}
+
+model CategoryFormQuestionOption {
+  id                      Int  @id @default(autoincrement())
+  questionId              Int?
+  categoryFormPageStackId Int?
+
+  order Int
+  text  String
+  page  CategoryFormQuestionPage?
+
+  question CategoryFormQuestion? @relation("QuestionOptions", fields: [questionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model CategoryFormQuestionPageOrder {
+  id          Int @id @default(autoincrement())
+  pageStackId Int
+  pageId      Int
+  order       Int
+
+  pageStack CategoryFormPageStack    @relation(fields: [pageStackId], references: [id], onDelete: Cascade)
+  page      CategoryFormQuestionPage @relation(fields: [pageId], references: [id], onDelete: Cascade)
+
+  @@unique([pageStackId, pageId, order])
+}
+
+model CategoryFormPageStack {
+  id         Int                             @id @default(autoincrement())
+  session    String
+  hash       String                          @unique()
+  pages      CategoryFormQuestionPage[]
+  pageOrders CategoryFormQuestionPageOrder[]
+  answer     CategoryFormAnswer?
+}
+
+model CategoryFormQuestion {
+  id          Int                      @id @unique
+  type        CategoryFormQuestionType
+  title       String
+  description String
+
+  options CategoryFormQuestionOption[] @relation("QuestionOptions")
+  answer  CategoryFormAnswer[]
+}
+
+model CategoryFormAnswer {
+  pageStackId Int      @unique
+  questionId  Int
+  answer      String   @default("")
+  answerList  String[] @default([])
+
+  pageStack CategoryFormPageStack @relation(fields: [pageStackId], references: [id], onDelete: Cascade)
+  question  CategoryFormQuestion  @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@unique([pageStackId, questionId])
 }

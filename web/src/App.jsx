@@ -16,11 +16,15 @@ import ChartPage from "./containers/ChartPage.jsx";
 import { Main, DrawerHeader } from './components/bar_component/BarDrawer.jsx';
 // import { Map } from "./containers/"
 
-
-import theme from "./theme.js";
-
 import ClinicPage from "./containers/ClinicPage.jsx";
 
+import theme from "./theme.jsx";
+import FindPage from "./containers/PersonalPage.jsx";
+import QuestionPage from "./containers/QuestionPage.jsx";
+import GetIn from "./containers/GetIn.jsx";
+import { question } from "./informations/question.js";
+import ClinicNavigationPage from "./containers/ClinicNavigationPage.jsx";
+import ScrollToTop from "./components/scrollToTop.jsx";
 function App() {
   const [open, setOpen] = useState(false);
   const { iflog, isManager } = useWebsite();

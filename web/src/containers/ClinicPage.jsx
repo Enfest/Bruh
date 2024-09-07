@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 
 import { Main } from "../components/bar_component/BarDrawer.jsx";
 import ClinicBar from '../components/ClinicBar.jsx';
+import QuestionPage from './QuestionPage.jsx';
 const ClinicPage = () => {
 
     const [section, setSection] = useState("");
@@ -33,7 +34,7 @@ const ClinicPage = () => {
                     <Typography variant='body'>我可以幫你什麼</Typography>
                 </Grid>
             </Grid>
-            
+            <QuestionPage />
             </Main>
             {/* <Map setSection = {setSection} section = {section} setId = {setId}/> */}
         </Box>

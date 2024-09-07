@@ -1,9 +1,15 @@
 import express from "express";
 
-import empty from "./api/empty";
+import categoryRoute from "./api/category"
+import fluRoute from "./api/flu"
+
+import initDB from "./api/initDB";
 
 const router = express.Router();
 
-router.get("/empty", empty);
+router.use("/category", categoryRoute);
+router.use("/flu", fluRoute);
+
+router.post("/initDB", initDB);
 
 export default router;

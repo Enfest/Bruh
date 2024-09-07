@@ -65,6 +65,12 @@ importers:
       index:
         specifier: ^0.4.0
         version: 0.4.0
+      js-sha256:
+        specifier: ^0.11.0
+        version: 0.11.0
+      lodash:
+        specifier: ^4.17.21
+        version: 4.17.21
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -4312,6 +4318,9 @@ packages:
   jiti@1.21.6:
     resolution: {integrity: sha512-2yTgeWTWzMWkHu6Jp9NKgePDaYHbntiwvYuuJLbbN9vl7DC9DvXKOB2BC3ZZ92D3cvV/aflH0osDfwpHepQ53w==}
     hasBin: true
+
+  js-sha256@0.11.0:
+    resolution: {integrity: sha512-6xNlKayMZvds9h1Y1VWc0fQHQ82BxTXizWPEtEeGvmOUYpBRy4gbWroHLpzowe6xiQhHpelCQiE7HEdznyBL9Q==}
 
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
@@ -9803,7 +9812,7 @@ snapshots:
 
   d3-geo@3.1.1:
     dependencies:
-      d3-array: 2.12.1
+      d3-array: 3.2.4
 
   d3-interpolate@2.0.1:
     dependencies:
@@ -11666,6 +11675,8 @@ snapshots:
       - utf-8-validate
 
   jiti@1.21.6: {}
+
+  js-sha256@0.11.0: {}
 
   js-tokens@4.0.0: {}
 
