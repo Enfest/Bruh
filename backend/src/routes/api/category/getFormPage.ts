@@ -85,6 +85,7 @@ const getFormPage = async (req: Request, res: Response) => {
 
     } catch (error) {
         res.send({ success: false, error });
+        console.log(error);
     }
 };
 

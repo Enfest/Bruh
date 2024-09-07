@@ -61,6 +61,7 @@ const submitFormPage = async (req: Request, res: Response) => {
         });
 
         const questionOrder = orderListToRecord(lastPage.questionOrders, "questionId");
+        // console.log(questionOrder);
         const _questions = await prisma.categoryFormQuestion.findMany({
             where: {
                 id: {
@@ -75,6 +76,7 @@ const submitFormPage = async (req: Request, res: Response) => {
                 }
             }
         });
+        // console.log(_questions);
 
         const questions = _questions.map((question) => {
             const order = questionOrder[question.id];
@@ -85,17 +87,16 @@ const submitFormPage = async (req: Request, res: Response) => {
             }
         })
         questions.sort((a, b) => a.order - b.order);
+        // console.log(questions);
 
         let newPages = questions.map((question) => {
             const options = question.options;
             options.sort((a, b) => a.order - b.order);
             const pages = options.map((option) => option.page).filter((page) => page !== null);
             return pages;
-        }).flat()
-        // console.log(newPages);
+        }).flat();
 
         const newPageOrderStart = pages.length - 1;
-        console.log(newPageOrderStart);
         await prisma.categoryFormPageStack.update({
             where: {
                 id: pageStack.id
