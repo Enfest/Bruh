@@ -23,7 +23,7 @@ export default function BasicSelect({ placeholder, options, id, onChange, defaul
         }
     }, [defaultValue, options]);
     return (
-        <Box sx={{ display:"block", m: 1, width: 200 }} alignContent="center">
+        <Box sx={{ display: "block", m: 1, width: 200 }} alignContent="center">
             <FormControl fullWidth>
                 <InputLabel id={`${id}-label`}>{placeholder}</InputLabel>
                 <Select
@@ -32,7 +32,7 @@ export default function BasicSelect({ placeholder, options, id, onChange, defaul
                     value={val ?? ""}
                     label={placeholder}
                     onChange={handleChange}
-                    // MenuProps={theme.select.MenuProps}
+                    MenuProps={theme.select.MenuProps}
                 >
                     {options.map((v) => (
                         <MenuItem key={`${id}-${v}`} value={v}>

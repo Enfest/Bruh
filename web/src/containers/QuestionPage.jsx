@@ -170,7 +170,7 @@ const QuestionPage = () => {
                             variant="contained"
                             onClick={() => handleNextPage()}
                             startIcon={<DoubleArrowIcon />}
-                            // sx={{ ...theme?.select.MenuProps.PaperProps.style, width: 300 }}
+                            sx={{ ...theme?.select.MenuProps.PaperProps.style, width: 300 }}
                         >
                             Next
                         </Button>
@@ -178,7 +178,7 @@ const QuestionPage = () => {
                         <Button
                             key={`${key}-submitted-butt`}
                             variant="secondary"
-                            // sx={{ ...theme?.select.MenuProps.PaperProps.style, width: 300 }}
+                            sx={{ ...theme?.select.MenuProps.PaperProps.style, width: 300 }}
                         >
                             <CircularProgress />
                         </Button>

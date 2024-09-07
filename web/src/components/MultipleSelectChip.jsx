@@ -66,7 +66,7 @@ function MultipleSelectChip({ placeholder, options, id, onChange, defaultValue }
                             ))}
                         </Box>
                     )}
-                    // MenuProps={theme.select.MenuProps}
+                    MenuProps={theme.select.MenuProps}
                 >
                     {options.map((val) => (
                         <MenuItem
