@@ -9,7 +9,20 @@ const AddMap = () => {
     googleMapsApiKey: "AIzaSyC4IVDAJux6HPcbkx0KHM4ulwAnLJwLocU",
     libraries: ["places"],
   });
-
+  const getAddressFromCoordinates = async (latitude, longitude) => {
+    try {
+      const response = await fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=AIzaSyC4IVDAJux6HPcbkx0KHM4ulwAnLJwLocU`
+      );
+      const json = await response.json();
+      console.log(json.results[0]?.formatted_address);
+      //setRealAddress(json.results[0]?.formatted_address);
+      //return json?.results[0];
+      // return json.movies;
+    } catch (error) {
+      console.error(error);
+    }
+  };
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -36,6 +49,7 @@ const AddMap = () => {
     }
   }, []);
   useEffect(() => {
+    userPosition ? getAddressFromCoordinates(userPosition.lat, userPosition.lng) : "";
     console.log(userPosition);
     setCenter(userPosition);
   }, [userPosition]);
