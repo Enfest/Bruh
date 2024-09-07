@@ -3,6 +3,7 @@ import express from "express";
 
 import http from "http";
 import bodyParser from "body-parser";
+import fileUpload from "express-fileupload";
 import { WebSocketServer } from "ws";
 
 import { ApolloServer } from "apollo-server-express";
@@ -22,6 +23,7 @@ const port = process.env.PORT || 4000;
   const app = express();
   app.use(bodyParser.json({ limit: "20mb" }));
   app.use(bodyParser.urlencoded({ limit: "20mb", extended: true }));
+  app.use(fileUpload());
   app.use("/api", apiRoute);
 
   const httpServer = http.createServer(app);
@@ -47,6 +49,7 @@ const port = process.env.PORT || 4000;
       return { prisma };
     },
     cache: "bounded",
+    introspection: true,
   });
 
   await server.start();

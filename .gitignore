@@ -4,4 +4,5 @@ backend/yarn.lock
 backend/node_modules
 backend/.DS_Store
 frontend/.DS_Store
+utils/node_modules
 .DS_Store

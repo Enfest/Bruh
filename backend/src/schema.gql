@@ -4,13 +4,9 @@
 # -----------------------------------------------
 
 type Mutation {
-  addTest(input: TestTypeCreateInput!): String!
+  addTest: String!
 }
 
 type Query {
   getTests: String!
-}
-
-input TestTypeCreateInput {
-  message: String!
 }

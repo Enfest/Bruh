@@ -1,0 +1,66 @@
+{
+    "category": {
+        "formQuestions": [
+            {
+                "id": 0,
+                "type": "TEXT",
+                "hasSubpage": false,
+                "title": "年齡",
+                "description": ""
+            },
+            {
+                "id": 1,
+                "type": "MULTISELECT",
+                "hasSubpage": true,
+                "title": "症狀",
+                "description": "",
+                "options": [
+                    {
+                        "text": "太甲了",
+                        "description": "",
+                        "pageTitle": "如何太甲",
+                        "subQuestionIds": [
+                            2,
+                            3
+                        ]
+                    },
+                    {
+                        "text": "中暑",
+                        "description": "",
+                        "pageTitle": "中暑情形",
+                        "subQuestionIds": [
+                            2,
+                            3
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": 2,
+                "type": "TEXT",
+                "hasSubpage": false,
+                "title": "持續時間",
+                "description": ""
+            },
+            {
+                "id": 3,
+                "type": "SELECT",
+                "hasSubpage": false,
+                "title": "疼痛模式",
+                "description": "",
+                "options": [
+                    "好痛",
+                    "好爽"
+                ]
+            }
+        ],
+        "initialPage": {
+            "description": "<INIT>",
+            "pageTitle": "來吧寶貝",
+            "subQuestionIds": [
+                0,
+                1
+            ]
+        }
+    }
+}
