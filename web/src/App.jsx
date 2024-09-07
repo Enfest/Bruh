@@ -8,8 +8,8 @@ import { styled } from "@mui/material/styles";
 import { ThemeProvider } from "@mui/material";
 import React from "react";
 import Box from "@mui/material/Box";
-
 import Bar from "./components/Bar.jsx";
+import Test from "./containers/Test.jsx";
 import AddMap from "./containers/AddMap.jsx";
 import MainPage from "./containers/MainPage.jsx";
 import Login from "./containers/Login.jsx";
@@ -35,14 +35,15 @@ function App() {
             {/* <Box sx = {{ width: "100%"}} > */}
             {/* <DrawerHeader> */}
             <Routes>
-              <Route path="/map" element={<AddMap />} />
-              <Route path="/" element={<MainPage />} />
+              <Route path="/" element={<Test />} />
+              {/*<Route path="/map" element={<AddMap />} />
+               <Route path="/" element={<MainPage />} />
               <Route path="/login" element={<Login />}></Route>
               <Route path="/manager" element={isManager ? <ManagerPage /> : <Login />} />
               <Route path="/checkout" element={<CheckoutPage />} />
               <Route path="/find" element={<FindPage />} />
               <Route path="/register" element={<Register />}></Route>
-              <Route path="/getin" element={<GetIn />}></Route>
+              <Route path="/getin" element={<GetIn />}></Route> */}
             </Routes>
             {/* </DrawerHeader> */}
             {/* </Box> */}
