@@ -35,15 +35,15 @@ function App() {
             {/* <Box sx = {{ width: "100%"}} > */}
             {/* <DrawerHeader> */}
             <Routes>
-              <Route path="/" element={<Test />} />
-              {/*<Route path="/map" element={<AddMap />} />
-               <Route path="/" element={<MainPage />} />
+              <Route path="/test" element={<Test />} />
+              <Route path="/map" element={<AddMap />} />
+              <Route path="/" element={<MainPage />} />
               <Route path="/login" element={<Login />}></Route>
               <Route path="/manager" element={isManager ? <ManagerPage /> : <Login />} />
               <Route path="/checkout" element={<CheckoutPage />} />
               <Route path="/find" element={<FindPage />} />
               <Route path="/register" element={<Register />}></Route>
-              <Route path="/getin" element={<GetIn />}></Route> */}
+              <Route path="/getin" element={<GetIn />}></Route>
             </Routes>
             {/* </DrawerHeader> */}
             {/* </Box> */}
