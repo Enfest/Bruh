@@ -15,9 +15,9 @@ const FluButton = ({ handleClick, fluType }) => {
     <Button
       key="two"
       onClick={(e) => handleClick(e.currentTarget.textContent)}
-      variant={fluType == "A型流感" ? "contained" : "outlined"}
+      variant={fluType == "登革熱" ? "contained" : "outlined"}
     >
-      A型流感
+      登革熱
     </Button>,
     <Button
       key="three"
