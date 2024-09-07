@@ -44,9 +44,11 @@ const getFormPage = async (req: Request, res: Response) => {
             });
 
             hash = uuidv4();
-            await prisma.categoryFormPageStack.create({
+            const session = uuidv4();
+            const pageStack = await prisma.categoryFormPageStack.create({
                 data: {
                     hash,
+                    session,
                     pages: {
                         connect: { id: initialPage.id }
                     },
