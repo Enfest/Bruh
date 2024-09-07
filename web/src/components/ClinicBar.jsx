@@ -3,18 +3,13 @@ import MuiAppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
 import {styled} from '@mui/material/styles';
-import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
-// import MenuIcon from '@mui/icons-material/Menu';
-import { useState } from "react";
 
 //import Navigate
 import { useNavigate, useLocation } from "react-router-dom";
-import BarDrawer from './bar_component/MenuDrawer';
 import { ThemeProvider } from '@emotion/react';
+import { IconButton } from '@mui/material';
+import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
 
 import theme1 from '../theme';
 
@@ -38,13 +33,13 @@ const AppBar = styled(MuiAppBar, {
 
 
 
-export default function ChartBar({open, setOpen}) {
+export default function ClinicBar({open, setOpen}) {
 
     const navigate = useNavigate();
 
     return (
         <ThemeProvider theme={theme1}>
-            <Box sx={{ flexGrow: 1 }}>
+            <Box sx={{ flexGrow: 1 }} >
                 <AppBar position='static' theme={theme1} open={open}>
                     <Toolbar>
                     <IconButton
@@ -56,13 +51,12 @@ export default function ChartBar({open, setOpen}) {
                         onClick={()=>{navigate("/")}}
                     >
                         <KeyboardDoubleArrowLeftIcon />
-                    </IconButton>
+                    </IconButton> 
                     <Typography variant="h3" 
                                 component="div" 
-                                alignSelf="center"
                                 sx={{ flexGrow: 1 }}
                                 style={{fontWeight: 700}}>
-                        臺北市近期傳染病統計
+                        看診小助手
                     </Typography>
                     </Toolbar>
                 </AppBar>

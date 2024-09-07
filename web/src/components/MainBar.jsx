@@ -38,16 +38,16 @@ const AppBar = styled(MuiAppBar, {
 
 
 
-export default function ChartBar({open, setOpen}) {
+export default function MainBar({open, setOpen}) {
 
     const navigate = useNavigate();
 
     return (
         <ThemeProvider theme={theme1}>
-            <Box sx={{ flexGrow: 1 }}>
+            <Box sx={{ flexGrow: 1 }} >
                 <AppBar position='static' theme={theme1} open={open}>
                     <Toolbar>
-                    <IconButton
+                    {/* <IconButton
                         size="large"
                         edge="start"
                         color="inherit"
@@ -56,13 +56,12 @@ export default function ChartBar({open, setOpen}) {
                         onClick={()=>{navigate("/")}}
                     >
                         <KeyboardDoubleArrowLeftIcon />
-                    </IconButton>
+                    </IconButton> */}
                     <Typography variant="h3" 
                                 component="div" 
-                                alignSelf="center"
                                 sx={{ flexGrow: 1 }}
                                 style={{fontWeight: 700}}>
-                        臺北市近期傳染病統計
+                        我還不知道要叫啥
                     </Typography>
                     </Toolbar>
                 </AppBar>

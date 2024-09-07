@@ -12,13 +12,14 @@ import Bar from "./components/Bar.jsx";
 import Test from "./containers/Test.jsx";
 import AddMap from "./containers/AddMap.jsx";
 import MainPage from "./containers/MainPage.jsx";
+import ChartPage from "./containers/ChartPage.jsx";
 import { Main, DrawerHeader } from './components/bar_component/BarDrawer.jsx';
 // import { Map } from "./containers/"
 
 
 import theme from "./theme.js";
-import FindPage from "./containers/PersonalPage.jsx";
-import GetIn from "./containers/GetIn.jsx";
+
+import ClinicPage from "./containers/ClinicPage.jsx";
 
 function App() {
   const [open, setOpen] = useState(false);
@@ -33,8 +34,9 @@ function App() {
             {/* <Box sx = {{ width: "100%"}} > */}
             {/* <DrawerHeader> */}
             <Routes>
-              <Route path="/test" element={<Test />} />
-              <Route path="/map" element={<AddMap />} />
+              <Route path="/statistic" element={<ChartPage />} />
+              <Route path="/finddoctor" element={<AddMap />} />
+              <Route path="/classification" element={<ClinicPage />} />
               <Route path="/" element={<MainPage />} />
   
             </Routes>

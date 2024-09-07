@@ -53,12 +53,18 @@ importers:
       d3-geo:
         specifier: ^3.1.1
         version: 3.1.1
+      d3-shape:
+        specifier: ^3.2.0
+        version: 3.2.0
       graphql:
         specifier: ^16.8.1
         version: 16.9.0
       gsap:
         specifier: ^3.12.5
         version: 3.12.5
+      index:
+        specifier: ^0.4.0
+        version: 0.4.0
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -3876,6 +3882,9 @@ packages:
     resolution: {integrity: sha512-EdDDZu4A2OyIK7Lr/2zG+w5jmbuk1DVBnEwREQvBzspBJkCEbRa8GxU1lghYcaGJCnRWibjDXlq779X1/y5xwg==}
     engines: {node: '>=8'}
 
+  index@0.4.0:
+    resolution: {integrity: sha512-48AIN2XNXFXDb7muQD+4RZvXSy862VkXu5vkLh2zjikLOBWjI68OBUaRxt8ng1tolPlK9vrwMP/5th0VY53oNg==}
+
   inflight@1.0.6:
     resolution: {integrity: sha512-k92I/b08q4wvFscXCLvqfsHCrjrF7yiXsQuIVvVE7N82W3+aqpzuUdBbfhWcy/FZR3/4IgflMgKLOsvPDrGCJA==}
     deprecated: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
@@ -5823,6 +5832,9 @@ packages:
   statuses@2.0.1:
     resolution: {integrity: sha512-RwNA9Z/7PrK06rYLIzFMlaF+l73iwpzsqRIFgbMLbTcLD6cOao82TaWefPXQvB2fOC4AjuYSEndS7N/mTCbkdQ==}
     engines: {node: '>= 0.8'}
+
+  step@1.0.0:
+    resolution: {integrity: sha512-sqFPUYBKa+XDdUz76UbHwUYP9eJ4i4aj/pm+4GkF1UQs5CcIdifZsGpyO3FASFv/ET2DtWLcrL8KfhjWwwwkfg==}
 
   stop-iteration-iterator@1.0.0:
     resolution: {integrity: sha512-iCGQj+0l0HOdZ2AEeBADlsRC+vsnDsZsbdSiH1yNSjcfKM7fdpCMfqAL/dwF5BLiw/XhRft/Wax6zQbhq2BcjQ==}
@@ -10980,6 +10992,10 @@ snapshots:
 
   indent-string@4.0.0: {}
 
+  index@0.4.0:
+    dependencies:
+      step: 1.0.0
+
   inflight@1.0.6:
     dependencies:
       once: 1.4.0
@@ -13280,6 +13296,8 @@ snapshots:
   statuses@1.5.0: {}
 
   statuses@2.0.1: {}
+
+  step@1.0.0: {}
 
   stop-iteration-iterator@1.0.0:
     dependencies:
