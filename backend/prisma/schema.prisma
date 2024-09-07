@@ -56,11 +56,12 @@ model CategoryFormQuestionOption {
   questionId              Int?
   categoryFormPageStackId Int?
 
-  text String
-  page CategoryFormQuestionPage?
+  order Int
+  text  String
+  page  CategoryFormQuestionPage?
 
-  question                        CategoryFormQuestion?             @relation("QuestionOptions", fields: [questionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  categoryFormQuestionOptionOrder CategoryFormQuestionOptionOrder[]
+  question CategoryFormQuestion? @relation("QuestionOptions", fields: [questionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  // categoryFormQuestionOptionOrder CategoryFormQuestionOptionOrder[]
 }
 
 model CategoryFormQuestionPageOrder {
@@ -69,8 +70,8 @@ model CategoryFormQuestionPageOrder {
   pageId      Int
   order       Int
 
-  pageStack CategoryFormPageStack    @relation(fields: [pageStackId], references: [id], onDelete: Cascade)
-  page      CategoryFormQuestionPage @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  pageStack CategoryFormPageStack    @relation(fields: [pageStackId], references: [id])
+  page      CategoryFormQuestionPage @relation(fields: [pageId], references: [id])
 
   @@unique([pageStackId, pageId, order])
 }
@@ -88,19 +89,19 @@ model CategoryFormQuestion {
   title       String
   description String
 
-  // subQuestionOrders CategoryFormSubQuestionOrder[] // Add this line
+  // optionOrders CategoryFormQuestionOptionOrder[] // Add this line
   options CategoryFormQuestionOption[] @relation("QuestionOptions")
 }
 
-model CategoryFormQuestionOptionOrder {
-  id         Int @id @default(autoincrement())
-  questionId Int
-  optionId   Int
-  order      Int
+// model CategoryFormQuestionOptionOrder {
+//   id         Int @id @default(autoincrement())
+//   questionId Int
+//   optionId   Int
+//   order      Int
 
-  // question CategoryFormQuestion       @relation(fields: [questionId], references: [id], onDelete: Cascade)
-  option CategoryFormQuestionOption @relation(fields: [optionId], references: [id], onDelete: Cascade)
+//   // question CategoryFormQuestion       @relation(fields: [questionId], references: [id])
+//   option   CategoryFormQuestionOption @relation(fields: [optionId], references: [id])
 
-  @@unique([questionId, order])
-  @@unique([questionId, optionId])
-}
+//   @@unique([questionId, order])
+//   @@unique([questionId, optionId])
+// }

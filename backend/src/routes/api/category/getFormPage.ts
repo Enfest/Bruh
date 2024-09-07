@@ -3,6 +3,9 @@ import type { Request, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
 import prisma from "../../../prisma";
 
+import { orderListToRecord } from "../../../utils/category";
+import { kMaxLength } from "buffer";
+
 
 const getFormQuestions = async (ids: number[]) => {
     // retrieve filled form data from queries
@@ -61,16 +64,19 @@ const getFormPage = async (req: Request, res: Response) => {
                 pageOrders: true
             }
         });
-        const pages = pageStack.pages.map((page, index) => {
-            const order = pageStack.pageOrders[index];
+
+        const pageOrder = orderListToRecord(pageStack.pageOrders, "pageId");
+        const pages = pageStack.pages.map((page) => {
+            const order = pageOrder[page.id];
             return {
-                order,
+                orderId: order[0],
+                order: order[1],
                 title: page.title,
                 description: page.description,
                 questionIds: page.questionIds
             }
         });
-        pages.sort();
+        pages.sort((a, b) => a.order - b.order);
 
         const page = pages[pages.length - 1];
         const formQuestions = await getFormQuestions(page.questionIds);

@@ -14,9 +14,11 @@ const init = async (req: Request, res: Response) => {
 
     // TODO: check data
     await Promise.all([
+        prisma.categoryFormQuestionOrder.deleteMany(),
         prisma.categoryFormQuestion.deleteMany(),
         prisma.categoryFormQuestionOption.deleteMany(),
         prisma.categoryFormPageStack.deleteMany(),
+        prisma.categoryFormQuestionPageOrder.deleteMany(),
         prisma.categoryFormQuestionPage.deleteMany()
     ]);
 
@@ -26,11 +28,12 @@ const init = async (req: Request, res: Response) => {
         const { id, type: typeString, title, description, options } = formQuestion;
         const type = CategoryFormQuestionType[typeString];
 
-        const optionsCreateData = (options ?? []).map((option) => {
+        const optionsCreateData = (options ?? []).map((option, index) => {
             if (typeof option === "string") {
-                return { text: option }
+                return { order: index, text: option }
             }
             return {
+                order: index,
                 text: option.text,
                 page: {
                     create: {
@@ -54,7 +57,7 @@ const init = async (req: Request, res: Response) => {
                 type,
                 title,
                 description,
-                options: { create: optionsCreateData }
+                options: { create: optionsCreateData },
             },
             include: {
                 options: {

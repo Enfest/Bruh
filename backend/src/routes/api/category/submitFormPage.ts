@@ -1,8 +1,11 @@
 import type { Request, Response } from "express";
 
+import { v4 as uuidv4 } from "uuid";
 import prisma from "../../../prisma";
 import { CategoryFormQuestion, CategoryFormQuestionType } from "../../../../prisma/generated/type-graphql";
 import { TCategoryFormResult } from "../../../types/global";
+
+import { orderListToRecord } from "../../../utils/category";
 
 
 // type TCategoryFormSubmit = {
@@ -21,14 +24,117 @@ const submitFormPage = async (req: Request, res: Response) => {
         const { hash, answers } = req.body as TCategoryFormPageSubmit;
         const pageStack = await prisma.categoryFormPageStack.findFirstOrThrow({
             where: { hash },
-            include: { pages: true, pageOrders: true }
+            include: {
+                pages: {
+                    include: {
+                        questionOrders: true
+                    }
+                },
+                pageOrders: true
+            }
         });
-        
-        console.log(pageStack);
 
-        res.send({ success: true });
+        const pageOrder = orderListToRecord(pageStack.pageOrders, "pageId");
+        const pages = pageStack.pages.map((page) => {
+            const order = pageOrder[page.id];
+            return {
+                orderId: order[0],
+                order: order[1],
+                ...page
+            };
+        })
+        pages.sort((a, b) => a.order - b.order);
+        const lastPage = pages[pages.length - 1];
+
+        await prisma.categoryFormPageStack.update({
+            where: {
+                id: pageStack.id
+            },
+            data: {
+                pageOrders: {
+                    delete: { id: lastPage.orderId }
+                },
+                pages: {
+                    disconnect: { id: lastPage.id }
+                }
+            }
+        });
+
+        const questionOrder = orderListToRecord(lastPage.questionOrders, "questionId");
+        const _questions = await prisma.categoryFormQuestion.findMany({
+            where: {
+                id: {
+                    in: lastPage.questionIds
+                }
+            },
+            include: {
+                options: {
+                    include: {
+                        page: true,
+                    }
+                }
+            }
+        });
+
+        const questions = _questions.map((question) => {
+            const order = questionOrder[question.id];
+            return {
+                orderId: order[0],
+                order: order[1],
+                ...question
+            }
+        })
+        questions.sort((a, b) => a.order - b.order);
+
+        let newPages = questions.map((question) => {
+            const options = question.options;
+            options.sort((a, b) => a.order - b.order);
+            const pages = options.map((option) => option.page).filter((page) => page !== null);
+            return pages;
+        }).flat()
+        // console.log(newPages);
+
+        const newPageOrderStart = pages.length - 1;
+        console.log(newPageOrderStart);
+        await prisma.categoryFormPageStack.update({
+            where: {
+                id: pageStack.id
+            },
+            data: {
+                pageOrders: {
+                    createMany: {
+                        data: newPages.map((page, index) => {
+                            return {
+                                order: index + newPageOrderStart,
+                                pageId: page.id
+                            }
+                        })
+                    }
+                },
+                pages: {
+                    connect: newPages.map((page) => {
+                        return { id: page.id }
+                    })
+                }
+            }
+        });
+
+        const newHash = uuidv4();
+        await prisma.categoryFormPageStack.update({
+            where: {
+                id: pageStack.id
+            },
+            data: {
+                hash: {
+                    set: newHash
+                }
+            }
+        })
+
+        res.send({ success: true, hash: newHash });
     } catch (error) {
         res.send({ success: false, error });
+        console.log(error);
     }
 };
 
