@@ -4,7 +4,7 @@ import mapdata from '../utils/1';
 import {geoCentroid} from 'd3-geo';
 import { Typography } from '@mui/material';
 import {gsap} from 'gsap';
-const Map = ({setSection, section, setId}) => {
+const Map = ({setSection, section}) => {
 
   const comp = React.useRef();
   // const null_comp = React.use
@@ -58,7 +58,6 @@ const Map = ({setSection, section, setId}) => {
                     onClick={() => {
                       console.log(stateName)
                       setSection(stateName)
-                      setId(id)
                     }}
                     key={geo.rsmKey}
                     geography={geo}

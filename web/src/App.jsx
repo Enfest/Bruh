@@ -28,8 +28,8 @@ function App() {
     <ThemeProvider theme={theme}>
       <Router>
         <Box>
-          <Bar open={open} setOpen={setOpen}></Bar>
-          <Main open={open}>
+          {/* <Bar open={open} setOpen={setOpen}></Bar> */}
+          {/* <Main open={open}> */}
             {/* <Box sx = {{ width: "100%"}} > */}
             {/* <DrawerHeader> */}
             <Routes>
@@ -40,7 +40,7 @@ function App() {
             </Routes>
             {/* </DrawerHeader> */}
             {/* </Box> */}
-          </Main>
+          {/* </Main> */}
         </Box>
       </Router>
     </ThemeProvider>
