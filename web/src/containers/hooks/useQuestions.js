@@ -25,9 +25,18 @@ const postQuestion = async (location, options) => {
     myHeaders.append("Content-Type", "application/json");
 
     const searchParams = new URLSearchParams(location.search);
-    let postParams = { hash: searchParams.get("hash") ?? "0", answers: {} };
+    // check hash is uuid4
+    const validHash = /^[0-9a-f]{12}4[0-9a-f]{3}[89ab][0-9a-f]{15}\Z$/;
+    const hash = searchParams.get("hash");
+    console.log("hash: ", hash);
+    let postParams = { hash: !validHash.test(hash) ? hash : "0", answers: {} };
     for (const option of options) {
         const id = option.id;
+        if (option.type === "TEXT") {
+            const text = searchParams.get(id);
+            postParams["answers"][id] = text;
+            continue;
+        }
         const subOptions = option.options;
         const selected = searchParams.getAll(id);
         const found = (text) => (e) => e.text === text;
@@ -44,6 +53,7 @@ const postQuestion = async (location, options) => {
         headers: myHeaders,
     });
     console.log("myRequest: ", myRequest);
+    console.log("body: ", JSON.stringify(postParams));
     const response = fetch(myRequest);
     return response;
 };

@@ -14,7 +14,7 @@ import Question from "../components/Question.jsx";
 import CircularProgress from "@mui/material/CircularProgress";
 import Zoom from "@mui/material/Zoom";
 import { useInViewport } from "../containers/hooks/isInView.js";
-
+import { question } from "../informations/question";
 const QuestionPage = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [loading, setLoading] = useState(true);
@@ -39,7 +39,10 @@ const QuestionPage = () => {
             const val = searchParams.getAll(key);
             oldVals[key] = val;
         }
-        setSearchParams({ ...oldVals, [name]: value });
+        const newVal = { ...oldVals, [name]: value };
+        if (JSON.stringify(oldVals) !== JSON.stringify(newVal)) {
+            setSearchParams({ ...oldVals, [name]: value });
+        }
     };
     const handleNextPage = () => {
         setLoading(true);
@@ -49,16 +52,22 @@ const QuestionPage = () => {
     };
     const handlePost = async () => {
         try {
-            const response = await handleFetch(() => postQuestion(location, questions));
+            console.log("handlePost");
+            const response = await handleFetch(() => {
+                console.log("location", location);
+                return postQuestion(location, questions);
+            });
             console.log("response: ", response);
             setLoading(false);
             setError(null);
-            const { _hash } = response;
+            const { hash: _hash } = response;
             if (_hash) {
+                setHash(_hash);
                 navigate(`?hash=${_hash}`);
             } else {
-                console.error("No hash returned");
-                navigate(`?hash=${hash}`);
+                // navigate(0);
+                setError("Cannot Fetch Next Question.");
+                setLoading(false);
             }
         } catch (error) {
             setError(error.message);
@@ -69,18 +78,24 @@ const QuestionPage = () => {
         try {
             const data = await handleFetch(() => getQuestion(location));
             const { hash, questions, title, description } = data;
-            setHash(hash);
-            setTitle(title);
-            setDescription(description);
-            setQuestions(questions);
+            if (hash) setHash(hash);
+            if (title) setTitle(title);
+            if (description) setDescription(description);
+            if (questions) setQuestions(questions);
 
             setData(data);
             setLoading(false);
             setError(null);
+            console.log("hash", hash);
             onChange("hash", hash);
         } catch (error) {
             setError(error.message);
             setLoading(false);
+            setHash("iamhash");
+
+            setTitle("This is Title");
+            setDescription("This is Description");
+            setQuestions(question);
         }
     };
     const handleFetch = async (callBack) => {
@@ -93,16 +108,22 @@ const QuestionPage = () => {
         setLoading(false);
         return data;
     };
+
     useEffect(() => {
-        handleGet();
-    }, []);
+        const searchParams = new URLSearchParams(location.search);
+        const validHash = /^[0-9a-f]{12}4[0-9a-f]{3}[89ab][0-9a-f]{15}\Z$/;
+        const _hash = searchParams.get("hash");
+        if (hash !== _hash || !validHash.test(hash)) {
+            handleGet();
+        }
+    }, [hash, location.search]);
     // useEffect(() => {
     //     const timeout = setTimeout(() => {
     //         setLoading(false);
     //     }, 1000);
     //     return () => clearTimeout(timeout);
     // }, [loading]);
-
+    console.log(history);
     return (
         <Box
             sx={{
