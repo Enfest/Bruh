@@ -41,7 +41,6 @@ function MultipleSelectChip({ placeholder, options, id, onChange, defaultValue }
         onChange(parsedValue);
     };
     useEffect(() => {
-        console.log("MultipleSelectChip, ", placeholder, defaultValue, options);
         setVals(defaultValue ?? []);
     }, [defaultValue]);
     return (

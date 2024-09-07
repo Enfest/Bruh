@@ -16,13 +16,6 @@ export default function BasicSelect({ placeholder, options, id, onChange, defaul
         onChange(value);
     };
     React.useEffect(() => {
-        console.log(
-            "BasicSelect, ",
-            placeholder,
-            defaultValue,
-            options,
-            options.includes(defaultValue)
-        );
         if (options.includes(defaultValue)) {
             setVal(defaultValue);
         } else {

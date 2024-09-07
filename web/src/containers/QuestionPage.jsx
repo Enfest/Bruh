@@ -14,8 +14,8 @@ import Question from "../components/Question.jsx";
 import CircularProgress from "@mui/material/CircularProgress";
 import Zoom from "@mui/material/Zoom";
 import { useInViewport } from "../containers/hooks/isInView.js";
-import { question } from "../informations/question";
-import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
+import { question, validHash } from "../informations/question";
+import DoubleArrowIcon from "@mui/icons-material/DoubleArrow";
 
 const QuestionPage = () => {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -50,7 +50,6 @@ const QuestionPage = () => {
         setLoading(true);
         console.log("handleNextPage");
         handlePost();
-        // turn off after 1 second
     };
     const handlePost = async () => {
         try {
@@ -113,19 +112,18 @@ const QuestionPage = () => {
 
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);
-        const validHash = /^[0-9a-f]{12}4[0-9a-f]{3}[89ab][0-9a-f]{15}\Z$/;
         const _hash = searchParams.get("hash");
         if (hash !== _hash || !validHash.test(hash)) {
+            console.log("refetching, hash: ", hash, _hash);
             handleGet();
         }
-    }, [hash, location.search]);
+    }, [hash, location.hash]);
     // useEffect(() => {
     //     const timeout = setTimeout(() => {
     //         setLoading(false);
     //     }, 1000);
     //     return () => clearTimeout(timeout);
     // }, [loading]);
-    console.log(history);
     return (
         <Box
             sx={{

@@ -36,6 +36,7 @@ const question = [
         options: ["好痛", "好爽"],
     },
 ];
+const validHash = /^[0-9a-f]{12}4[0-9a-f]{3}[89ab][0-9a-f]{15}\Z$/;
 
-export { question };
+export { question, validHash };
 export default question;

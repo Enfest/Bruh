@@ -1,5 +1,6 @@
 //react import
 import { useEffect, useState, useCallback } from "react";
+import { validHash } from "../../informations/question";
 // const backendHost = "http://localhost:4000";
 const backendHost = `http://${window.location.hostname}:4000`;
 const getQuestion = async (location) => {
@@ -26,7 +27,6 @@ const postQuestion = async (location, options) => {
 
     const searchParams = new URLSearchParams(location.search);
     // check hash is uuid4
-    const validHash = /^[0-9a-f]{12}4[0-9a-f]{3}[89ab][0-9a-f]{15}\Z$/;
     const hash = searchParams.get("hash");
     console.log("hash: ", hash);
     let postParams = { hash: !validHash.test(hash) ? hash : "0", answers: {} };
