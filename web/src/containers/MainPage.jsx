@@ -89,8 +89,8 @@ const MainPage = () => {
                         </Typography>
                     </CardContent>
                 </Card>
-                <Box sx={{ height: "10px" }}></Box>
-                <Card
+                {/* <Box sx={{ height: "10px" }}></Box> */}
+                {/* <Card
                     sx={{ width: "100%" }}
                     onClick={() => {
                         navigate("/classification/result");
@@ -109,7 +109,7 @@ const MainPage = () => {
                             推薦結果頁
                         </Typography>
                     </CardContent>
-                </Card>
+                </Card> */}
             </Main>
             {/* <Map setSection = {setSection} section = {section} setId = {setId}/> */}
         </Box>
