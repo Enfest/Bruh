@@ -6,3 +6,5 @@ backend/.DS_Store
 frontend/.DS_Store
 utils/node_modules
 .DS_Store
+host.db
+**/__pycache__
