@@ -13,7 +13,7 @@ import Paper from "@mui/material/Paper";
 import HospitalCard from "../components/HospitalCard.jsx";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import { getResult } from "./hooks/useQuestions.js";
-import { useR } from "./hooks/useResult.js";
+import { useR } from "./hooks/useResult.jsx";
 const hpData = [
     {
         id: "1",

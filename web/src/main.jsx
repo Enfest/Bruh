@@ -4,7 +4,7 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { WebsiteProvider } from "./containers/hooks/WebsiteContext.jsx";
-import { RProvider } from "./containers/hooks/useResult.js";
+import { RProvider } from "./containers/hooks/useResult.jsx";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

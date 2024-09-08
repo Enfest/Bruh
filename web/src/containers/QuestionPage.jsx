@@ -26,7 +26,7 @@ import Zoom from "@mui/material/Zoom";
 import { useInViewport } from "../containers/hooks/isInView.js";
 import { question, validHash } from "../informations/question";
 import DoubleArrowIcon from "@mui/icons-material/DoubleArrow";
-import { useR } from "./hooks/useResult.js";
+import { useR } from "./hooks/useResult.jsx";
 const QuestionPage = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [loading, setLoading] = useState(true);
@@ -69,6 +69,12 @@ const QuestionPage = () => {
                 return postQuestion(location, questions);
             });
             console.log("response: ", response);
+            if (response.done) {
+                setResult(response);
+                navigate("/classification/result", {
+                    state: { hash: hash, data: response },
+                });
+            }
             if (!response.success) {
                 throw new Error(response.error);
             }
