@@ -72,4 +72,4 @@ const getResult = async (hash) => {
     return response;
 };
 
-export { getQuestion, postQuestion };
+export { getQuestion, postQuestion, getResult };

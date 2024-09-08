@@ -121,7 +121,7 @@ const QuestionPage = () => {
             throw new Error("Network response was not ok.");
         }
         const data = await response.json();
-        console.log(JSON.stringify(data));
+        // console.log(JSON.stringify(data));
         setLoading(false);
         return data;
     };
@@ -152,10 +152,7 @@ const QuestionPage = () => {
             {" "}
             <Grid container sx={{ width: "100%" }} spacing={2}>
                 <Grid item>
-                    <Avatar
-                        alt="robot"
-                        src="https://media.istockphoto.com/id/949119664/vector/cute-white-doctor-robot-modern-health-care-flat-editable-vector-illustration-clip-art.jpg?s=612x612&w=0&k=20&c=Tp7_la5mgePZ2mkOk_17jX0f-vorLZmbT9JOTDyG4gw="
-                    />
+                    <Avatar alt="robot" src="assets/robot.jpg" />
                 </Grid>
                 <Grid item alignContent="center">
                     <Paper
@@ -164,7 +161,7 @@ const QuestionPage = () => {
                     >
                         <Typography variant="body">{title}</Typography>
                     </Paper>
-                    {description ? (
+                    {description && description !== "<INIT>" ? (
                         <Paper
                             sx={{ borderTopRightRadius: 0, borderTopLeftRadius: 0 }}
                             elevation={0}
