@@ -26,7 +26,7 @@ import Zoom from "@mui/material/Zoom";
 import { useInViewport } from "../containers/hooks/isInView.js";
 import { question, validHash } from "../informations/question";
 import DoubleArrowIcon from "@mui/icons-material/DoubleArrow";
-
+import { useR } from "./hooks/useResult.js";
 const QuestionPage = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [loading, setLoading] = useState(true);
@@ -44,7 +44,7 @@ const QuestionPage = () => {
     const key = sha256(title + description + JSON.stringify(questions));
     const ref = React.useRef(null);
     const { isVisible, update } = useInViewport(ref);
-
+    const { data: result, setData: setResult } = useR();
     const onChange = (name, value) => {
         const oldVals = {};
         for (const key of searchParams.keys()) {
@@ -94,7 +94,13 @@ const QuestionPage = () => {
     const handleGet = async () => {
         try {
             const data = await handleFetch(() => getQuestion(location));
-            const { hash, questions, title, description } = data;
+            const { hash, questions, title, description, done } = data;
+            if (done) {
+                setResult(data);
+                navigate("/classification/result", {
+                    state: { hash: hash, data: data },
+                });
+            }
             if (hash) setHash(hash);
             if (title) setTitle(title);
             if (description) setDescription(description);

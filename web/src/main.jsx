@@ -1,17 +1,20 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import { WebsiteProvider } from './containers/hooks/WebsiteContext.jsx';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import { WebsiteProvider } from "./containers/hooks/WebsiteContext.jsx";
+import { RProvider } from "./containers/hooks/useResult.js";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <React.StrictMode>
-    <WebsiteProvider>
-    <App />
-    </WebsiteProvider>
-  </React.StrictMode>
+    <React.StrictMode>
+        <RProvider>
+            <WebsiteProvider>
+                <App />
+            </WebsiteProvider>
+        </RProvider>
+    </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

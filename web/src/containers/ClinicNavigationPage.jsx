@@ -13,7 +13,7 @@ import Paper from "@mui/material/Paper";
 import HospitalCard from "../components/HospitalCard.jsx";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import { getResult } from "./hooks/useQuestions.js";
-
+import { useR } from "./hooks/useResult.js";
 const hpData = [
     {
         id: "1",
@@ -32,38 +32,59 @@ const ClinicNavigationPage = () => {
     const [dialogLoading, setDialogLoading] = useState(false);
     const [HPdata, setHPData] = useState(hpData);
     const [suggestionLoading, setSuggestionLoading] = useState(false);
+    const [suggestion, setSuggestion] = useState("");
     const navigate = useNavigate();
     const theme = useTheme();
     const location = useLocation();
     const key = "ClinicNavigationPage";
-    const handleGet = async (hash) => {
-        try {
-            const data = await handleFetch(() => getResult(hash));
-            const { hash, questions, title, description } = data;
-            setHPData(data);
-            setDialogLoading(false);
-            setError(null);
-        } catch (error) {
-            setError(error.message);
-            setDialogLoading(false);
-        }
-    };
-    const handleFetch = async (callBack) => {
-        const response = await callBack();
-        if (!response.ok) {
-            throw new Error("Network response was not ok.");
-        }
-        const data = await response.json();
-        console.log(JSON.stringify(data));
-        setDialogLoading(false);
-        return data;
-    };
+    const { data: result, setData: setResult } = useR();
+    // const handleGet = async (hash) => {
+    //     try {
+    //         const data = await handleFetch(() => getResult(hash));
+    //         const { hash, questions, title, description } = data;
+    //         setHPData(data);
+    //         setDialogLoading(false);
+    //         setError(null);
+    //     } catch (error) {
+    //         setError(error.message);
+    //         setDialogLoading(false);
+    //     }
+    // };
+    // const handleFetch = async (callBack) => {
+    //     const response = await callBack();
+    //     if (!response.ok) {
+    //         throw new Error("Network response was not ok.");
+    //     }
+    //     const data = await response.json();
+    //     console.log(JSON.stringify(data));
+    //     setDialogLoading(false);
+    //     return data;
+    // };
     useEffect(() => {
-        const searchParams = new URLSearchParams(location.search);
-        const hash = searchParams.get("hash");
-        setDialogLoading(true);
-        handleGet(hash);
-    }, [location.hash]);
+        const { suggestion: _suggestion, hospital } = result;
+        const parsedHospital = hospital.map((hp) => {
+            const {
+                id,
+                name,
+                division: clinic,
+                avatarURL,
+                map_url: googleMapURL,
+                register_link: clinicURL,
+                distance,
+            } = hp;
+            return { id, name, clinic, avatarURL, googleMapURL, clinicURL, distance };
+        });
+        setHPData(parsedHospital);
+        setSuggestionLoading(false);
+        setSuggestion(_suggestion);
+    }, [result]);
+    // useEffect(() => {
+    //     const searchParams = new URLSearchParams(location.search);
+    //     const hash = searchParams.get("hash");
+    //     setDialogLoading(true);
+    //     handleGet(hash);
+
+    // }, [location.hash, result]);
     return (
         <Box
             sx={{
@@ -83,7 +104,7 @@ const ClinicNavigationPage = () => {
             </Grid>
             {!dialogLoading ? (
                 <Grid container sx={{ width: "100%" }}>
-                    <Typography variant="body">description</Typography>
+                    <Typography variant="body">{suggestion}</Typography>
                 </Grid>
             ) : (
                 <CircularProgress />
@@ -101,7 +122,7 @@ const ClinicNavigationPage = () => {
                         id={hp.id}
                         name={hp.name}
                         clinic={hp.clinic}
-                        avatarURL={hp.avatarURL}
+                        avatarURL={"../assets/robot.jpg"}
                         googleMapURL={hp.googleMapURL}
                         clinicURL={hp.clinicURL}
                         distance={hp.distance}
