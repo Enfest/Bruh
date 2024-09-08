@@ -1,6 +1,6 @@
 # langchain
 langchain
-langchain 
+langchain_openai 
 langchain_chroma 
 langchain_community 
 langchain_text_splitters
@@ -14,3 +14,5 @@ torch
 
 #python server
 fastapi
+fastapi[standard]
+googlemaps

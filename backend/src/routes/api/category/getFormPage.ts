@@ -6,12 +6,11 @@ import prisma from "../../../prisma";
 import { orderListToRecord } from "../../../utils/category";
 import { kMaxLength } from "buffer";
 
-
 const getFormQuestions = async (ids: number[]) => {
     // retrieve filled form data from queries
     const formQuestions = await prisma.categoryFormQuestion.findMany({
         where: {
-            id: { in: ids }
+            id: { in: ids },
         },
         include: {
             // options: {
@@ -19,30 +18,30 @@ const getFormQuestions = async (ids: number[]) => {
             //         page: true
             //     }
             // }
-            options: true
-        }
+            options: true,
+        },
     });
 
     return formQuestions;
-}
+};
 
 const getFormPage = async (req: Request, res: Response) => {
     try {
         const hash = req.query.hash as string;
-        
+
         // Find or create the initial page stack
         const pageStackFind = await prisma.categoryFormPageStack.findFirst({
             where: { hash },
             include: {
                 pages: {
-                    select: { id: true }
-                }
-            }
+                    select: { id: true },
+                },
+            },
         });
 
         if (pageStackFind === null) {
             const initialPage = await prisma.categoryFormQuestionPage.findFirstOrThrow({
-                where: { description: "<INIT>" }
+                where: { description: "<INIT>" },
             });
 
             // hash = uuidv4();
@@ -52,12 +51,12 @@ const getFormPage = async (req: Request, res: Response) => {
                     hash,
                     // session,
                     pages: {
-                        connect: { id: initialPage.id }
+                        connect: { id: initialPage.id },
                     },
                     pageOrders: {
-                        create: [{ order: 0, pageId: initialPage.id }]
-                    }
-                }
+                        create: [{ order: 0, pageId: initialPage.id }],
+                    },
+                },
             });
         }
 
@@ -68,7 +67,7 @@ const getFormPage = async (req: Request, res: Response) => {
                 pages: true,
                 pageOrders: true,
                 answer: true,
-            }
+            },
         });
 
         // Process and sort pages
@@ -80,11 +79,12 @@ const getFormPage = async (req: Request, res: Response) => {
                 order: order[1],
                 title: page.title,
                 description: page.description,
-                questionIds: page.questionIds
-            }
+                questionIds: page.questionIds,
+            };
         });
         pages.sort((a, b) => a.order - b.order);
 
+        console.log(pages);
         // Get the last page and its questions
         const page = pages[pages.length - 1];
         const formQuestions = await getFormQuestions(page.questionIds);
@@ -94,14 +94,14 @@ const getFormPage = async (req: Request, res: Response) => {
             if (answer.answer !== "") {
                 return {
                     questionId: answer.questionId,
-                    answer: answer.answer
-                }
+                    answer: answer.answer,
+                };
             }
             return {
                 questionId: answer.questionId,
-                answerList: answer.answerList
-            }
-        })
+                answerList: answer.answerList,
+            };
+        });
 
         // Send response with page data
         res.send({
@@ -110,9 +110,8 @@ const getFormPage = async (req: Request, res: Response) => {
             title: page.title,
             description: page.description,
             questions: formQuestions,
-            answers: formAnswers
+            answers: formAnswers,
         });
-
     } catch (error) {
         // Handle errors and send error response
         res.send({ success: false, error });
@@ -121,4 +120,3 @@ const getFormPage = async (req: Request, res: Response) => {
 };
 
 export default getFormPage;
-

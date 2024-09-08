@@ -9,13 +9,13 @@ import { CategoryFormAnswer, CategoryFormQuestionType } from "@prisma/client";
 
 // Define the structure of the form submission data
 type TCategoryFormPageSubmit = {
-    hash: string                              // Unique identifier for the form session
-    answers: Record<string, string | string[]> // User's answers to the questions
-}
+    hash: string; // Unique identifier for the form session
+    answers: Record<string, string | string[]>; // User's answers to the questions
+};
 
 type TNode = {
-    nextHashes: string[],
-    answers: CategoryFormAnswer[]
+    nextHashes: string[];
+    answers: CategoryFormAnswer[];
 };
 
 const traceAnswers = async (hash: string) => {
@@ -24,28 +24,30 @@ const traceAnswers = async (hash: string) => {
     while (true) {
         let pageStack = await prisma.categoryFormPageStack.findUniqueOrThrow({
             where: { hash },
-            include: { pages: true, answer: true }
+            include: { pages: true, answer: true },
         });
         const page = pageStack.pages[pageStack.pages.length - 1];
         let content = `[PAGE ${page.id}]\ntitle: ${page.title}\ndescription: ${page.description}\n`;
         for (const { questionId, answer, answerList } of pageStack.answer) {
             const question = await prisma.categoryFormQuestion.findFirst({
                 where: {
-                    id: questionId
+                    id: questionId,
                 },
                 include: {
-                    options: true
-                }
+                    options: true,
+                },
             });
             if (question === null) {
                 continue;
             }
-            if (question?.type === CategoryFormQuestionType.MULTISELECT) {
+            if (question?.type !== CategoryFormQuestionType.TEXT) {
                 const optionTextMap: Record<number, string> = {};
                 question.options.forEach((option) => {
                     optionTextMap[option.order] = option.text;
-                })
-                const optionString = answerList.map((optionId) => optionTextMap[parseInt(optionId)]).join(",");
+                });
+                const optionString = answerList
+                    .map((optionId) => optionTextMap[parseInt(optionId)])
+                    .join(",");
                 content += `${question.title}: ${optionString}\n`;
             } else {
                 content += `${question.title}: ${answer}\n`;
@@ -64,35 +66,30 @@ const traceAnswers = async (hash: string) => {
 };
 
 const submitToAgent = async (res: Response, fullAnswers: string) => {
-    const myHeader = new Headers()
-    myHeader.append("Content-Type", "application/json")
+    const myHeader = new Headers();
+    myHeader.append("Content-Type", "application/json");
     fetch("http://localhost:8000/init/", {
         method: "POST",
         body: JSON.stringify({
             session: "1",
-            background: [fullAnswers]
+            background: [fullAnswers],
         }),
-        headers: myHeader
-    }).then((res)=>{
-        return res.json()        
-    }).catch((err)=>{
-        console.log("error: ",err)
+        headers: myHeader,
     })
+        .then((res) => {
+            return res.json();
+        })
+        .catch((err) => {
+            console.log("error: ", err);
+        });
 
-    const response = fetch("http://localhost:8000/get_suggestion/", {
+    const p_res = await fetch("http://localhost:8000/get_suggestion/", {
         method: "GET",
-        headers: myHeader
-    }).then((res)=>{
-        return res.json()        
-    }).then((res)=>{
-        return res
-    }
-    ).catch((err)=>{
-        console.log("error: ",err)
-    })
-    
-    res.json(response);
-
+        headers: myHeader,
+    });
+    const j = await p_res.json();
+    j.done = true;
+    res.send(j);
 };
 
 const submitFormPage = async (req: Request, res: Response) => {
@@ -105,11 +102,11 @@ const submitFormPage = async (req: Request, res: Response) => {
             include: {
                 pages: {
                     include: {
-                        questionOrders: true
-                    }
+                        questionOrders: true,
+                    },
                 },
-                pageOrders: true
-            }
+                pageOrders: true,
+            },
         });
 
         // Convert page orders to a more efficient format and sort pages
@@ -119,9 +116,9 @@ const submitFormPage = async (req: Request, res: Response) => {
             return {
                 orderId: order[0],
                 order: order[1],
-                ...page
+                ...page,
             };
-        })
+        });
         pages.sort((a, b) => a.order - b.order);
         const lastPage = pages[pages.length - 1];
 
@@ -130,14 +127,16 @@ const submitFormPage = async (req: Request, res: Response) => {
         const newHash = createHash("md5").update(hash).update(answersString).digest("hex");
 
         // Check if a page stack with the new hash already exists
-        if (await prisma.categoryFormPageStack.count({
-            where: { hash: newHash }
-        }) > 0) {
+        if (
+            (await prisma.categoryFormPageStack.count({
+                where: { hash: newHash },
+            })) > 0
+        ) {
             if (pageStack.done) {
                 const fullAnswers = await traceAnswers(hash);
                 await submitToAgent(res, fullAnswers);
             }
-            res.send({ success: true, hash: newHash, done: pageStack.done });
+            // res.send({ success: true, hash: newHash, done: pageStack.done });
             return;
         }
 
@@ -148,15 +147,15 @@ const submitFormPage = async (req: Request, res: Response) => {
                 hash: newHash,
                 prevHash: hash,
                 pages: {
-                    connect: prunedPages.map(page => ({ id: page.id }))
+                    connect: prunedPages.map((page) => ({ id: page.id })),
                 },
                 pageOrders: {
-                    create: prunedPages.map(page => ({
+                    create: prunedPages.map((page) => ({
                         order: page.order,
-                        pageId: page.id
-                    }))
-                }
-            }
+                        pageId: page.id,
+                    })),
+                },
+            },
         });
 
         // Store the answers for the current page
@@ -166,35 +165,34 @@ const submitFormPage = async (req: Request, res: Response) => {
                     return {
                         hash,
                         questionId: parseInt(questionId),
-                        answer
-                    }
-                }
-                else {
+                        answer,
+                    };
+                } else {
+                    console.log(typeof answer[0]);
                     return {
                         hash,
                         questionId: parseInt(questionId),
-                        answerList: answer
-                    }
+                        answerList: answer.map((a) => a.toString()),
+                    };
                 }
-            })
+            }),
         });
-        console.log(createdAnswers);
 
         // Retrieve and sort questions for the last page
         const questionOrder = orderListToRecord(lastPage.questionOrders, "questionId");
         const _questions = await prisma.categoryFormQuestion.findMany({
             where: {
                 id: {
-                    in: lastPage.questionIds
-                }
+                    in: lastPage.questionIds,
+                },
             },
             include: {
                 options: {
                     include: {
                         page: true,
-                    }
-                }
-            }
+                    },
+                },
+            },
         });
 
         const questions = _questions.map((question) => {
@@ -202,29 +200,41 @@ const submitFormPage = async (req: Request, res: Response) => {
             return {
                 orderId: order[0],
                 order: order[1],
-                ...question
-            }
-        })
+                ...question,
+            };
+        });
         questions.sort((a, b) => a.order - b.order);
 
+        console.log("ANSWERS", answers);
+
         // Determine new pages based on question options
-        let newPages = questions.map((question) => {
-            const options = question.options;
-            options.sort((a, b) => a.order - b.order);
-            const pages = options.map((option) => option.page).filter((page) => page !== null);
-            return pages;
-        }).flat();
+        let newPages = questions
+            .map((question) => {
+                const options = question.options;
+                options.sort((a, b) => a.order - b.order);
+                const answer = answers[question.id];
+                if (Array.isArray(answer)) {
+                    const pages = options
+                        .filter((option) => option.order.toString() in answer)
+                        .map((option) => option.page)
+                        .filter((page) => page !== null);
+                    console.log("PAGES", pages);
+                    return pages;
+                }
+                return [];
+            })
+            .flat();
 
         // Quit if no more pages
         // console.log(prunedPages.length, newPages.length)
         if (prunedPages.length + newPages.length === 0) {
             await prisma.categoryFormPageStack.update({
                 where: { id: pageStack.id },
-                data: { done: { set: true } }
-            })
+                data: { done: { set: true } },
+            });
             let fullAnswers = await traceAnswers(hash);
             await submitToAgent(res, fullAnswers);
-            res.send({ success: true, hash: newHash, done: true });
+            // res.send({ success: true, hash: newHash, done: true });
             return;
         }
 
@@ -232,7 +242,7 @@ const submitFormPage = async (req: Request, res: Response) => {
         const newPageOrderStart = pages.length - 1;
         await prisma.categoryFormPageStack.update({
             where: {
-                id: newPageStack.id
+                id: newPageStack.id,
             },
             data: {
                 pageOrders: {
@@ -240,17 +250,17 @@ const submitFormPage = async (req: Request, res: Response) => {
                         data: newPages.map((page, index) => {
                             return {
                                 order: index + newPageOrderStart,
-                                pageId: page.id
-                            }
-                        })
-                    }
+                                pageId: page.id,
+                            };
+                        }),
+                    },
                 },
                 pages: {
                     connect: newPages.map((page) => {
-                        return { id: page.id }
-                    })
-                }
-            }
+                        return { id: page.id };
+                    }),
+                },
+            },
         });
 
         // Send success response with the new hash
@@ -263,4 +273,3 @@ const submitFormPage = async (req: Request, res: Response) => {
 };
 
 export default submitFormPage;
-
