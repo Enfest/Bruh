@@ -6,7 +6,7 @@ from langchain import PromptTemplate
 from pymilvus import model
 from pymilvus import MilvusClient
 
-os.environ["OPENAI_API_KEY"] = "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"
+os.environ["OPENAI_API_KEY"] = ""
 
 client = MilvusClient("host.db")
 if client.has_collection(collection_name="demo_collection"):

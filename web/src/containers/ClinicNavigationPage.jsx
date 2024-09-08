@@ -71,8 +71,10 @@ const ClinicNavigationPage = () => {
                 map_url: googleMapURL,
                 register_link: clinicURL,
                 distance,
+                lat,
+                lgn
             } = hp;
-            return { id, name, clinic, avatarURL, googleMapURL, clinicURL, distance };
+            return { id, name, clinic, avatarURL, googleMapURL, clinicURL, distance, lat, lgn };
         });
         setHPData(parsedHospital);
         setSuggestionLoading(false);
@@ -109,26 +111,30 @@ const ClinicNavigationPage = () => {
             ) : (
                 <CircularProgress />
             )}
-            <Box
-                sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    width: "100%",
-                }}
+            <Grid container sx={{width: "100%"}} spacing={2}
+                // sx={{
+                //     display: "flex",
+                //     justifyContent: "center",
+                //     width: "100%",
+                // }}
             >
                 {HPdata.map((hp) => (
-                    <HospitalCard
-                        key={`${key}-hp-${hp.id}`}
-                        id={hp.id}
-                        name={hp.name}
-                        clinic={hp.clinic}
-                        avatarURL={"../assets/robot.jpg"}
-                        googleMapURL={hp.googleMapURL}
-                        clinicURL={hp.clinicURL}
-                        distance={hp.distance}
-                    />
+                    <Grid item sx={{width: "100%"}}key={`${key}-hp-${hp.id}`}>
+                        <HospitalCard
+                            key={`${key}-hp-${hp.id}`}
+                            id={hp.id}
+                            name={hp.name}
+                            clinic={hp.clinic}
+                            avatarURL={"../assets/robot.jpg"}
+                            googleMapURL={hp.googleMapURL}
+                            clinicURL={hp.clinicURL}
+                            distance={hp.distance}
+                            lat = {hp.lat}
+                            lgn = {hp.lgn}
+                        />
+                    </Grid>
                 ))}
-            </Box>
+            </Grid>
             <div style={{ display: "flex", justifyContent: "center" }} key={`${key}-butt-wrapper`}>
                 {!dialogLoading ? (
                     <Button

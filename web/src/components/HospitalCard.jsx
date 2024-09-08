@@ -34,9 +34,11 @@ const HospitalCard = ({
   googleMapURL,
   clinicURL,
   distance,
+  lat,
+  lgn
 }) => {
   const key = sha256(
-    id + name + clinic + avatarURL + googleMapURL + clinicURL + distance
+    id + name + clinic + avatarURL + googleMapURL + clinicURL + distance + lat +lgn
   );
   const ref = React.useRef(null);
   const { isVisible, update } = useInViewport(ref);
@@ -113,7 +115,7 @@ const HospitalCard = ({
           </CardContent>
         </Card>
         <Card sx={{ width: "100%" }}>
-          <Hos />
+          <Hos lat={lat} lgn={lgn}/>
         </Card>
       </Grid>
     </Zoom>

@@ -14,37 +14,40 @@ const AddMap = ({ add }) => {
   });
 
   useEffect(() => {
-    if (navigator.geolocation && !userPosition) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setUserPosition({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          });
-        },
-        (error) => {
-          console.error("Error getting geolocation:", error);
-        }
-      );
-    } else {
-      // Handle the case where geolocation is not supported
-      Swal.fire({
-        position: "middle",
-        text: "允許存取使用者位置來使用此功能",
-        icon: "warning",
-        showCloseButton: true,
-        showConfirmButton: false,
-      });
-    }
+    setUserPosition({lat:25.02162588271662, lng:121.53522885876406})
+    // if (navigator.geolocation && !userPosition) {
+    //   navigator.geolocation.getCurrentPosition(
+    //     (position) => {
+    //       setUserPosition({
+    //         lat: position.coords.latitude,
+    //         lng: position.coords.longitude,
+    //       });
+    //     },
+    //     (error) => {
+    //       console.error("Error getting geolocation:", error);
+    //     }
+    //   );
+    // } else {
+    //   // Handle the case where geolocation is not supported
+    //   Swal.fire({
+    //     position: "middle",
+    //     text: "允許存取使用者位置來使用此功能",
+    //     icon: "warning",
+    //     showCloseButton: true,
+    //     showConfirmButton: false,
+    //   });
+    // }
+
   }, []);
 
   useEffect(() => {
     if (userPosition) {
       setCenter(userPosition);
+      console.log(userPosition)
       axios
         .post(
           "/getPos",
-          { lat: userPosition.lat, lng: userPosition.lng },
+          { lat:userPosition["lat"], lng:userPosition["lng"] },
           {
             headers: {
               "Access-Control-Allow-Origin": "*",
@@ -68,10 +71,10 @@ const AddMap = ({ add }) => {
   };
 
   const handleMapClick = (event) => {
-    setCenter({
-      lat: event.latLng.lat(),
-      lng: event.latLng.lng(),
-    });
+    // setCenter({
+    //   lat: event.latLng.lat(),
+    //   lng: event.latLng.lng(),
+    // });
   };
 
   return (
@@ -80,7 +83,7 @@ const AddMap = ({ add }) => {
         <GoogleMap
           mapContainerStyle={{ width: "100%", height: "400px" }}
           center={center} // Use center state
-          zoom={16}
+          zoom={15}
           onClick={handleMapClick}
         >
           {/* Add a marker for the user's position */}

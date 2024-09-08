@@ -1,6 +1,6 @@
 import googlemaps
 
-client = googlemaps.Client(key="AIzaSyC4IVDAJux6HPcbkx0KHM4ulwAnLJwLocU")
+client = googlemaps.Client(key="AIzaSyBnpu_269m1Q1BqJzrAGiis9kYLMYJhs3Q")
 
 f = open("clinic_family.csv", "r")
 wf = open("clinic_family_latlng.csv", "w")

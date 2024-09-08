@@ -5,13 +5,13 @@
                 "id": 0,
                 "type": "TEXT",
                 "title": "年齡",
-                "description": ""
+                "description": "您的年齡"
             },
             {
                 "id": 1,
                 "type": "SELECT",
                 "title": "性別",
-                "description": "",
+                "description": "您的性別",
                 "options": [
                     "男",
                     "女",

@@ -26,7 +26,7 @@ const fakeData = [
     lgn: 121.0,
   },
 ];
-const Hos = () => {
+const Hos = ({lat, lgn}) => {
   const [selectedClinic, setSelectedClinic] = useState(null);
   const [userPosition, setUserPosition] = useState(null);
   const [center, setCenter] = useState({ lat: 10, lng: 121.565 });
@@ -38,28 +38,7 @@ const Hos = () => {
   console.log(typeof fakeData[0]["lat"]);
 
   useEffect(() => {
-    if (navigator.geolocation && !userPosition) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setUserPosition({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          });
-        },
-        (error) => {
-          console.error("Error getting geolocation:", error);
-        }
-      );
-    } else {
-      // Handle the case where geolocation is not supported
-      Swal.fire({
-        position: "middle",
-        text: "允許存取使用者位置來使用此功能",
-        icon: "warning",
-        showCloseButton: true,
-        showConfirmButton: false,
-      });
-    }
+    setUserPosition({lat:25.02162588271662, lng:121.53522885876406})
   }, []);
 
   const handleMarkerClick = (clinic) => {
@@ -102,7 +81,7 @@ const Hos = () => {
               <MarkerF
                 label={index}
                 key={index}
-                position={{ lat: clinic["lat"], lng: clinic["lgn"] }}
+                position={{ lat: lat, lng: lgn }}
                 onClick={() => handleMarkerClick(clinic)}
                 options={{
                   icon: {

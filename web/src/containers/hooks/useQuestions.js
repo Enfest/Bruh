@@ -2,6 +2,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { validHash } from "../../informations/question";
 // const backendHost = "http://localhost:4000";
+// const backendHost = `http://${window.location.hostname}:4000`;
 const backendHost = `http://${window.location.hostname}:4000`;
 const getQuestion = async (location) => {
     const myHeaders = new Headers();

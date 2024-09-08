@@ -61,7 +61,7 @@ export default function MainBar({open, setOpen}) {
                                 component="div" 
                                 sx={{ flexGrow: 1 }}
                                 style={{fontWeight: 700}}>
-                        我還不知道要叫啥
+                        醫療小助手
                     </Typography>
                     </Toolbar>
                 </AppBar>
