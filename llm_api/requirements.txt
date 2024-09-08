@@ -10,7 +10,7 @@ pymilvus
 pymilvus[model]
 
 # model related
-pytorch
+torch
 
 #python server
 fastapi

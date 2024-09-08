@@ -64,7 +64,35 @@ const traceAnswers = async (hash: string) => {
 };
 
 const submitToAgent = async (res: Response, fullAnswers: string) => {
-    console.log(fullAnswers);
+    const myHeader = new Headers()
+    myHeader.append("Content-Type", "application/json")
+    fetch("http://localhost:8000/init/", {
+        method: "POST",
+        body: JSON.stringify({
+            session: "1",
+            background: [fullAnswers]
+        }),
+        headers: myHeader
+    }).then((res)=>{
+        return res.json()        
+    }).catch((err)=>{
+        console.log("error: ",err)
+    })
+
+    const response = fetch("http://localhost:8000/get_suggestion/", {
+        method: "GET",
+        headers: myHeader
+    }).then((res)=>{
+        return res.json()        
+    }).then((res)=>{
+        return res
+    }
+    ).catch((err)=>{
+        console.log("error: ",err)
+    })
+    
+    res.json(response);
+
 };
 
 const submitFormPage = async (req: Request, res: Response) => {

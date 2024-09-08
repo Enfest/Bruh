@@ -31,7 +31,7 @@ class Hospital(BaseModel):
 # base models
 class Session(BaseModel):
     session: str
-    background: list[Background]
+    background: list[str]
 
 class Query(BaseModel):
     session: str
