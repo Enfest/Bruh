@@ -13,13 +13,12 @@ const getFormQuestions = async (ids: number[]) => {
             id: { in: ids },
         },
         include: {
-            // options: {
-            //     include: {
-            //         page: true
-            //     }
-            // }
             options: true,
         },
+    });
+
+    formQuestions.forEach((formQuestion) => {
+        formQuestion.options.sort((a, b) => a.order - b.order);
     });
 
     return formQuestions;

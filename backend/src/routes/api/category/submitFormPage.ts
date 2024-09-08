@@ -89,6 +89,7 @@ const submitToAgent = async (res: Response, fullAnswers: string) => {
     });
     const j = await p_res.json();
     j.done = true;
+    console.log(j);
     res.send(j);
 };
 
@@ -168,7 +169,7 @@ const submitFormPage = async (req: Request, res: Response) => {
                         answer,
                     };
                 } else {
-                    console.log(typeof answer[0]);
+                    // console.log(typeof answer[0]);
                     return {
                         hash,
                         questionId: parseInt(questionId),
